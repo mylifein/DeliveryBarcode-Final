@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.HubPermissionApiMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.HubPermissionApi">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="apiUrl" property="apiUrl" jdbcType="VARCHAR"/>
+        <result column="apiMethod" property="apiMethod" jdbcType="INTEGER"/>
+        <result column="apiLevel" property="apiLevel" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    uuid, apiUrl, apiMethod, apiLevel, op_user, create_time, update_user,op_user, create_time, update_time,del_flag
+  </sql>
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from hub_permissionapi
+        where uuid = #{uuid,jdbcType=VARCHAR} and del_flag is null
+    </select>
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from hub_permissionapi where del_flag is null
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hub_permissionapi
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+
+
+    <insert id="insert" parameterType="com.chenbro.deliverybarcode.model.HubPermissionApi">
+        insert into hub_permissionapi
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="apiUrl != null">
+                apiUrl,
+            </if>
+            <if test="apiMethod != null">
+                apiMethod,
+            </if>
+            <if test="apiLevel != null">
+                apiLevel,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="apiUrl != null">
+                #{apiUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="apiMethod != null">
+                #{apiMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="apiLevel != null">
+                #{apiLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.HubPermissionApi">
+        update hub_permissionapi
+        <set>
+            <if test="apiUrl != null">
+                apiUrl = #{apiUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="apiMethod != null">
+                apiMethod = #{apiMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="apiLevel != null">
+                apiLevel = #{apiLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                op_user = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_time = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

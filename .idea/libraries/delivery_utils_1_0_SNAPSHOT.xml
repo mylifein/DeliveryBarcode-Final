@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="delivery-utils-1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/common-parent/delivery-utils/target/delivery-utils-1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

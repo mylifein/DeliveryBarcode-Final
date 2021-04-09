@@ -18,8 +18,8 @@
 
 
     <sql id="Base_Column_List">
-    uuid, field_no, field_name, field_value, field_desc,op_user, create_time,update_user, update_time,del_flag
-  </sql>
+        uuid, field_no, field_name, field_value, field_desc,op_user, create_time,update_user, update_time,del_flag
+    </sql>
 
 
 
@@ -39,8 +39,8 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_carton_info
-    where uuid = #{uuid,jdbcType=VARCHAR}
+        delete from t_carton_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
 
 

@@ -1,6 +1,7 @@
 package com.chenbro.deliverybarcode.web.controller;
 
 import com.chenbro.deliverybarcode.model.CodeRule;
+import com.chenbro.deliverybarcode.model.HubUser;
 import com.chenbro.deliverybarcode.model.MandFieldCite;
 import com.chenbro.deliverybarcode.model.RuleCite;
 import com.chenbro.deliverybarcode.model.base.Result;
@@ -8,9 +9,11 @@ import com.chenbro.deliverybarcode.model.base.ResultCode;
 import com.chenbro.deliverybarcode.service.ICodeRuleService;
 import com.chenbro.deliverybarcode.service.IRuleCiteService;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +52,15 @@ public class CodeRuleController {
     public Result queryCodeRuleDetail(String uuid){
         CodeRule codeRuleDetail = codeRuleService.findDetailByUuid(uuid);
         return  new Result(ResultCode.SUCCESS,codeRuleDetail);
+    }
+
+    @RequestMapping("updateCodeRule")
+    @ResponseBody
+    public Result updateCodeRule(@RequestBody CodeRule codeRule){
+        HubUser opUser = (HubUser) SecurityUtils.getSubject().getPrincipal();
+        codeRule.setUpdateBy(opUser.getUsername());
+        codeRuleService.update(codeRule);
+        return new Result(ResultCode.SUCCESS);
     }
 
 

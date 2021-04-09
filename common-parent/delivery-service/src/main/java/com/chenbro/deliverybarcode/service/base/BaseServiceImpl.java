@@ -98,4 +98,7 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T>{
     @Autowired
     protected  BarcodeHistoryMapper barcodeHistoryMapper;
 
+    @Autowired
+    protected VMIStockMapper vmiStockMapper;
+
 }

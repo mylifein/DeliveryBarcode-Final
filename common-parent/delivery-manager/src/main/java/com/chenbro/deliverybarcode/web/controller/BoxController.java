@@ -7,6 +7,7 @@ import com.chenbro.deliverybarcode.model.WoBatch;
 import com.chenbro.deliverybarcode.model.base.BoxStatus;
 import com.chenbro.deliverybarcode.model.base.Result;
 import com.chenbro.deliverybarcode.model.base.ResultCode;
+import com.chenbro.deliverybarcode.model.response.MonitorInfo;
 import com.chenbro.deliverybarcode.service.IBoxService;
 import com.chenbro.deliverybarcode.service.IWoBatchService;
 import com.chenbro.deliverybarcode.utils.DownloadUtils;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @ClassName BoxController
@@ -142,6 +144,25 @@ public class BoxController {
     }
 
 
+    @RequestMapping("destroyBox")
+    public String forwardDestroyBox(){
+        return "box/destroyBox";
+    }
+
+    @RequestMapping("destroyPallet")
+    public String forwardDestroyPallet(){
+        return "box/destroyPallet";
+    }
+
+    @RequestMapping("qualityCheck")
+    public String forwardToQualityCheck(){
+        return "box/qualityCheck";
+    }
+
+    @RequestMapping("distributeBatch")
+    public String distributeBatch(){
+        return "box/distributeBatch";
+    }
     /**
      * @Description //TODO  根據裝箱單號/棧板號  收貨處理 將boxStatus 修改爲2
      * @Date 2020/2/19 8:32
@@ -187,10 +208,48 @@ public class BoxController {
         return new Result(ResultCode.SUCCESS,woBatch);
     }
 
+    @RequestMapping("distributeBatchNo")
+    @ResponseBody
+    public Result distributeBatchNo(String uniqueNo, String productType){
+        HubUser opUser = (HubUser) SecurityUtils.getSubject().getPrincipal();
+        return woBatchService.distributeBatchNo(uniqueNo, productType, opUser.getUsername());
+    }
+
     @RequestMapping("updateWoBatch")
     @ResponseBody
     public Result updateWoBatch(WoBatch woBatch){
-        woBatchService.update(woBatch);
-        return new Result(ResultCode.SUCCESS);
+        synchronized (this){
+            return woBatchService.updateBatchNo(woBatch);
+        }
+    }
+
+
+    @RequestMapping("queryMonitor")
+    @ResponseBody
+    public Result queryMonitor(String prodLineId){
+        List<MonitorInfo> monitorInfos = boxService.queryMonitorInfos(prodLineId);
+        return new Result(ResultCode.SUCCESS,monitorInfos);
+    }
+
+    @RequestMapping("queryMonitorUncompleted")
+    @ResponseBody
+    public Result queryMonitorUncompleted(String prodLineId){
+        List<MonitorInfo> monitorInfos = boxService.queryUncompletedInfos(prodLineId);
+        return new Result(ResultCode.SUCCESS,monitorInfos);
+    }
+
+
+    @RequestMapping(value = "packingBoxes", method = RequestMethod.GET)
+    @ResponseBody
+    public Result packingBoxes() {
+        return boxService.currentPallet();
+    }
+
+
+    @RequestMapping(value = "disconnect", method = RequestMethod.GET)
+    @ResponseBody
+    public Result disconnectPallet(String barcode) {
+        HubUser opUser = (HubUser) SecurityUtils.getSubject().getPrincipal();
+        return boxService.disconnectBox(barcode,opUser.getUsername());
     }
 }

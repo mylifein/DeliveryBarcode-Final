@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.BarcodeHistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.BarcodeHistory">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="barcode" property="barcode" jdbcType="VARCHAR"/>
+        <result column="act_type" property="actType" jdbcType="VARCHAR"/>
+        <result column="barcode_type" property="barcodeType" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="DATE"/>
+        <result column="end_time" property="endTime" jdbcType="DATE"/>
+        <result column="duration" property="duration" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        uuid, barcode, act_type, op_user, create_time, update_user, update_time,del_flag
+    </sql>
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from barcode_history
+        where uuid = #{uuid,jdbcType=VARCHAR} and del_flag is null
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from barcode_history
+        <where>
+            del_flag is null
+            <if test="barcode != null">
+                and barcode = #{barcode,jdbcType=VARCHAR}
+            </if>
+        </where> order by create_time desc
+    </select>
+
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hub_role
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+    <insert id="insert" parameterType="com.chenbro.deliverybarcode.model.BarcodeHistory">
+        insert into barcode_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="barcode != null">
+                barcode,
+            </if>
+            <if test="actType != null">
+                act_type,
+            </if>
+            <if test="barcodeType != null">
+                barcode_type,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="duration != null">
+                duration,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="barcode != null">
+                #{barcode,jdbcType=VARCHAR},
+            </if>
+            <if test="actType != null">
+                #{actType,jdbcType=VARCHAR},
+            </if>
+            <if test="barcodeType != null">
+                #{barcodeType,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.BarcodeHistory">
+        update barcode_history
+        <set>
+            <if test="barcode != null">
+                #{barcode,jdbcType=VARCHAR},
+            </if>
+            <if test="actType != null">
+                #{actType,jdbcType=VARCHAR},
+            </if>
+            <if test="barcodeType != null">
+                #{barcodeType,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=VARCHAR},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

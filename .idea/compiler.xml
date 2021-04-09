@@ -16,9 +16,9 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="common-parent" target="1.5" />
-      <module name="delivery-api" target="1.7" />
+      <module name="delivery-api" target="1.8" />
       <module name="delivery-dao" target="1.7" />
-      <module name="delivery-manager" target="1.7" />
+      <module name="delivery-manager" target="8" />
       <module name="delivery-model" target="1.7" />
       <module name="delivery-service" target="1.7" />
       <module name="delivery-utils" target="1.7" />

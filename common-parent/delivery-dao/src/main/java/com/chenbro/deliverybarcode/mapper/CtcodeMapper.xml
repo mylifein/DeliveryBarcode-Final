@@ -70,11 +70,11 @@
 
     <select id="findQtysByStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
         select
-    SUM(cartonQty)
-    from t_carton_info where del_flag is null
-    <if test="_parameter != null and _parameter != ''">
-        and carton_status = #{status,jdbcType=VARCHAR}
-    </if>
+        SUM(cartonQty)
+        from t_carton_info where del_flag is null
+        <if test="_parameter != null and _parameter != ''">
+            and carton_status = #{status,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <select id="findAll" resultMap="BaseResultMap" >
@@ -85,11 +85,9 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_carton_info
-    where uuid = #{uuid,jdbcType=VARCHAR}
+        delete from t_carton_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
-
-
 
 
 </mapper>

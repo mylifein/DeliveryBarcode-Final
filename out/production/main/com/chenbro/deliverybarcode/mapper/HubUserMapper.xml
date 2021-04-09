@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.HubUserMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.HubUser">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="enable_state" property="enableState" jdbcType="VARCHAR"/>
+        <result column="work_number" property="workNumber" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="departmentName" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseDetailResultMap" type="com.chenbro.deliverybarcode.model.HubUser">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="enable_state" property="enableState" jdbcType="VARCHAR"/>
+        <result column="work_number" property="workNumber" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="departmentName" jdbcType="VARCHAR"/>
+        <result column="stuff_photo" property="staffPhoto" jdbcType="LONGVARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <resultMap id="complexResultMap" type="com.chenbro.deliverybarcode.model.HubUser">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="enable_state" property="enableState" jdbcType="VARCHAR"/>
+        <result column="work_number" property="workNumber" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="VARCHAR"/>
+        <result column="department_id" property="departmentId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="departmentName" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <collection property="roles" ofType="com.chenbro.deliverybarcode.model.HubRole">
+            <id column="roleId" property="uuid"></id>
+            <result column="roleName" property="name" jdbcType="VARCHAR"/>
+            <result column="description" property="description" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, username, password, enable_state, work_number, email, mobile, gender, department_id,
+    dept_name, op_user, create_time, update_time,del_flag
+    </sql>
+
+    <sql id="BaseDetail_Column_List">
+    uuid, username, password, enable_state, work_number, email, mobile, gender, department_id,
+    dept_name,stuff_photo, op_user, create_time, update_time,del_flag
+    </sql>
+
+    <select id="findByUUid" resultMap="BaseDetailResultMap" parameterType="java.lang.String">
+        select
+        <include refid="BaseDetail_Column_List"/>
+        from hub_user
+        where uuid = #{uuid,jdbcType=VARCHAR} and del_flag is null
+    </select>
+
+    <select id="findUnionByUUid" resultMap="complexResultMap" parameterType="java.lang.String">
+        select
+        u.*,r.uuid roleId,r.name name,r.name roleName,r.description description
+        from hub_user u,
+             hub_role r,
+             hub_user_role ur
+        where u.uuid = #{uuid,jdbcType=VARCHAR} and u.uuid = ur.user_id and r.uuid = ur.role_id and u.del_flag is null and ur.del_flag is null
+    </select>
+
+
+    <select id="findByUsername" resultMap="BaseDetailResultMap" parameterType="java.lang.String">
+        select <include refid="BaseDetail_Column_List"/> from hub_user where username=#{username,jdbcType=VARCHAR} and del_flag is null
+    </select>
+
+    <select id="findAll" resultMap="complexResultMap">
+        select
+        u.*,r.uuid roleId,r.name name,r.name roleName,r.description description
+        from hub_user u left join  hub_user_role ur on u.uuid = ur.user_id left join hub_role r on r.uuid = ur.role_id
+        where u.del_flag is null and ur.del_flag is null
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hub_user
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="assignUserRole">
+        insert into hub_user_role (uuid, user_id, role_id, op_user, create_time) values
+        (#{id,jdbcType=VARCHAR},#{user.uuid,jdbcType=VARCHAR},#{role.uuid,jdbcType=VARCHAR},#{createBy,jdbcType=VARCHAR},#{createDate,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insert" parameterType="com.chenbro.deliverybarcode.model.HubUser">
+        insert into hub_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="enableState != null">
+                enable_state,
+            </if>
+            <if test="workNumber != null">
+                work_number,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="departmentId != null">
+                department_id,
+            </if>
+            <if test="departmentName != null">
+                dept_name,
+            </if>
+            <if test="staffPhoto != null">
+                stuff_photo,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="enableState != null">
+                #{enableState,jdbcType=VARCHAR},
+            </if>
+            <if test="workNumber != null">
+                #{workNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentId != null">
+                #{departmentId,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentName != null">
+                #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="staffPhoto != null">
+                #{staffPhoto,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.HubUser">
+        update hub_user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="enableState != null">
+                enable_state = #{enableState,jdbcType=VARCHAR},
+            </if>
+            <if test="workNumber != null">
+                work_number = #{workNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                gender = #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentName != null">
+                dept_name = #{departmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="staffPhoto != null">
+                stuff_photo = #{staffPhoto,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+
+
+</mapper>

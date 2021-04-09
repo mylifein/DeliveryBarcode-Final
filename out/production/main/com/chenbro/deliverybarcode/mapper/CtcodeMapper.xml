@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.CtcodeMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.Ctcode">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="ct_code" property="ctNumber" jdbcType="VARCHAR"/>
+        <result column="rule_no" property="ruleNo" jdbcType="VARCHAR"/>
+        <result column="work_no" property="workNo" jdbcType="VARCHAR"/>
+        <result column="cus_no" property="cusNo" jdbcType="VARCHAR"/>
+        <result column="cus_name" property="cusName" jdbcType="VARCHAR"/>
+        <result column="cus_po" property="cusPo" jdbcType="VARCHAR"/>
+        <result column="po_qty" property="poQty" jdbcType="VARCHAR"/>
+        <result column="cus_matno" property="cusMatno" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="offi_no" property="offiNo" jdbcType="VARCHAR"/>
+        <result column="ver_no" property="verNo" jdbcType="VARCHAR"/>
+        <result column="wo_quantity" property="woQuantity" jdbcType="VARCHAR"/>
+        <result column="model_no" property="modelNo" jdbcType="VARCHAR"/>
+        <result column="so_order" property="soOrder" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <resultMap id="InspurBaseResultMap" type="com.chenbro.deliverybarcode.model.InspurPallet">
+        <id column="ItemNo" property="itemNo" jdbcType="INTEGER"/>
+        <result column="WorkOrder" property="workOrder" jdbcType="VARCHAR"/>
+        <result column="CustomerSegment" property="customerSegment" jdbcType="VARCHAR"/>
+        <result column="Amount" property="amount" jdbcType="INTEGER"/>
+        <result column="ScanTime" property="scanTime" jdbcType="TIMESTAMP"/>
+        <result column="BatchNo" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="PalletNo" property="palletNo" jdbcType="VARCHAR"/>
+        <result column="PO" property="po" jdbcType="VARCHAR"/>
+        <result column="VehicleNo" property="vehicleNo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, ct_code, rule_no, work_no, cus_no, cus_name, cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,op_user, create_time,update_user, update_time,del_flag
+  </sql>
+
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_code_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByCtNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_code_info
+        where ct_code = #{ctNumber,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="findBoxsByStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_carton_info where del_flag is null
+        <if test="_parameter != null and _parameter != ''">
+            and carton_status = #{status,jdbcType=VARCHAR}
+        </if> order by create_time
+    </select>
+
+    <select id="findQtysByStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select
+    SUM(cartonQty)
+    from t_carton_info where del_flag is null
+    <if test="_parameter != null and _parameter != ''">
+        and carton_status = #{status,jdbcType=VARCHAR}
+    </if>
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_code_info
+        where del_flag is null order by create_time desc
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_carton_info
+    where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+
+
+</mapper>

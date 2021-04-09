@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.CodeRuleMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.CodeRule">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="rule_no" property="ruleNo" jdbcType="VARCHAR"/>
+        <result column="rule_desc" property="ruleDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <resultMap id="DetailResultMap" type="com.chenbro.deliverybarcode.model.CodeRule">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="rule_no" property="ruleNo" jdbcType="VARCHAR"/>
+        <result column="rule_desc" property="ruleDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <collection property="ruleContents" ofType="com.chenbro.deliverybarcode.model.RuleContent">
+            <id column="contentId" property="uuid" jdbcType="VARCHAR"/>
+            <result column="contentRuleNo" property="ruleNo" jdbcType="VARCHAR"/>
+            <result column="seq_no" property="sequence" jdbcType="VARCHAR"/>
+            <result column="rule_type" property="typeNo" jdbcType="VARCHAR"/>
+            <result column="rule_value" property="ruleValue" jdbcType="VARCHAR"/>
+            <result column="rule_length" property="ruleLength" jdbcType="INTEGER"/>
+            <result column="contentOpuser" property="createBy" jdbcType="VARCHAR"/>
+            <result column="contentCreateTime" property="createDate" jdbcType="VARCHAR"/>
+            <result column="contentUpdateUser" property="updateBy" jdbcType="VARCHAR"/>
+            <result column="contentUpdateTime" property="updateDate" jdbcType="VARCHAR"/>
+            <result column="contentFlag" property="delFlag" jdbcType="VARCHAR"/>
+            <association property="ruleType" javaType="com.chenbro.deliverybarcode.model.RuleType">
+                <id column="typeId" property="uuid" jdbcType="VARCHAR"/>
+                <result column="type_no" property="typeNo" jdbcType="VARCHAR"/>
+                <result column="type_desc" property="typeDesc" jdbcType="VARCHAR"/>
+                <result column="typeOpuser" property="createBy" jdbcType="VARCHAR"/>
+                <result column="typeCreateTime" property="createDate" jdbcType="VARCHAR"/>
+                <result column="typeUpdateUser" property="updateBy" jdbcType="VARCHAR"/>
+                <result column="typeUpdateTime" property="updateDate" jdbcType="VARCHAR"/>
+                <result column="typeflag" property="delFlag" jdbcType="VARCHAR"/>
+            </association>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, rule_no, rule_desc, op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_file_reldel
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findDetailByUuid" resultMap="DetailResultMap" parameterType="java.lang.String">
+        select
+        a.uuid, a.rule_no, a.rule_desc, a.op_user, a.create_time, a.update_user, a.update_time, a.del_flag,
+        b.uuid contentId,b.rule_no contentRuleNo,b.seq_no,b.rule_type,b.rule_value,b.rule_length,b.op_user contentOpuser, b.create_time contentCreateTime, b.update_user contentUpdateUser, b.update_time contentUpdateTime, b.del_flag contentFlag,
+        c.uuid typeId, c.type_no, c.type_desc, c.op_user typeOpuser, c.create_time typeCreateTime, c.update_user typeUpdateUser, c.update_time typeUpdateTime, c.del_flag typeflag
+        from t_rule_info a ,t_code_rule b ,t_rule_type c
+        where a.rule_no = b.rule_no and b.rule_type = c.type_no and a.uuid = #{uuid,jdbcType=VARCHAR} and b.del_flag is null order by b.seq_no
+    </select>
+
+
+    <select id="findDetailByRuleNo" resultMap="DetailResultMap" parameterType="java.lang.String">
+        select
+        a.uuid, a.rule_no, a.rule_desc, a.op_user, a.create_time, a.update_user, a.update_time, a.del_flag,
+        b.uuid contentId,b.rule_no contentRuleNo,b.seq_no,b.rule_type,b.rule_value,b.rule_length,b.op_user contentOpuser, b.create_time contentCreateTime, b.update_user contentUpdateUser, b.update_time contentUpdateTime, b.del_flag contentFlag,
+        c.uuid typeId, c.type_no, c.type_desc, c.op_user typeOpuser, c.create_time typeCreateTime, c.update_user typeUpdateUser, c.update_time typeUpdateTime, c.del_flag typeflag
+        from t_rule_info a ,t_code_rule b ,t_rule_type c
+        where a.rule_no = b.rule_no and b.rule_type = c.type_no and a.rule_no = #{ruleNo,jdbcType=VARCHAR} and b.del_flag is null order by b.seq_no
+    </select>
+
+
+    <select id="findAll" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_rule_info
+        where del_flag is null order by create_time
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_model_file
+    where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+
+
+</mapper>

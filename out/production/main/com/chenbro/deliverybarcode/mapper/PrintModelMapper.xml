@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.PrintModelMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.PrintModel">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="file_no" property="fileNo" jdbcType="VARCHAR"/>
+        <result column="fileName" property="fileName" jdbcType="VARCHAR"/>
+        <result column="fileDescription" property="fileDescription" jdbcType="VARCHAR"/>
+        <result column="fileAddress" property="fileAddress" jdbcType="BLOB"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="QueryResultMap" type="com.chenbro.deliverybarcode.model.PrintModel">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="file_no" property="fileNo" jdbcType="VARCHAR"/>
+        <result column="fileName" property="fileName" jdbcType="VARCHAR"/>
+        <result column="fileDescription" property="fileDescription" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="DetailResultMap" type="com.chenbro.deliverybarcode.model.PrintModel">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="file_no" property="fileNo" jdbcType="VARCHAR"/>
+        <result column="fileName" property="fileName" jdbcType="VARCHAR"/>
+        <result column="fileDescription" property="fileDescription" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <association property="mandatoryField" javaType="com.chenbro.deliverybarcode.model.MandatoryField">
+            <id column="manId" property="uuid" jdbcType="VARCHAR"/>
+            <result column="man_no" property="manNo" jdbcType="VARCHAR"/>
+            <result column="man_desc" property="manDesc" jdbcType="VARCHAR"/>
+            <result column="manOpuser" property="createBy" jdbcType="VARCHAR"/>
+            <result column="manCreateTime" property="createDate" jdbcType="VARCHAR"/>
+            <result column="manUpdateUser" property="updateBy" jdbcType="VARCHAR"/>
+            <result column="manUpdateTime" property="updateDate" jdbcType="VARCHAR"/>
+            <result column="manflag" property="delFlag" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, file_no, fileName, fileDescription, fileAddress,op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+    <sql id="Query_Column_List">
+    uuid, file_no, fileName, fileDescription,op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_model_file
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByFileNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Query_Column_List"/>
+        from t_model_file
+        where file_no = #{fileNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByCtNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_model_file
+        where ct_code = #{ctNumber,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="findBoxsByStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_model_file where del_flag is null
+        <if test="_parameter != null and _parameter != ''">
+            and carton_status = #{status,jdbcType=VARCHAR}
+        </if> order by create_time
+    </select>
+
+
+    <select id="findAll" resultMap="QueryResultMap" >
+        select
+        <include refid="Query_Column_List"/>
+        from t_model_file
+        where del_flag is null order by file_no
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_model_file
+    where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+
+
+</mapper>

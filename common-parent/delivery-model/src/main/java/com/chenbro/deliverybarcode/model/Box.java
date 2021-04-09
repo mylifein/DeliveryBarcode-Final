@@ -16,6 +16,7 @@ public class Box extends BaseEntity {
     private String cartonNo;
     private Integer cartonQty;
     private String prodlineId;
+    private String prodLineDesc;
     private String cartonStatus;
     private String capacityNo;
     private String packType;
@@ -201,5 +202,13 @@ public class Box extends BaseEntity {
 
     public void setVehicleNo(String vehicleNo) {
         this.vehicleNo = vehicleNo;
+    }
+
+    public String getProdLineDesc() {
+        return prodLineDesc;
+    }
+
+    public void setProdLineDesc(String prodLineDesc) {
+        this.prodLineDesc = prodLineDesc;
     }
 }

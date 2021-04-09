@@ -26,6 +26,7 @@ public class CheckQueryCond implements Serializable {
     private String endCheckTime;
     private String deliverMan;
 
+
     public String getQualityNo() {
         return qualityNo;
     }

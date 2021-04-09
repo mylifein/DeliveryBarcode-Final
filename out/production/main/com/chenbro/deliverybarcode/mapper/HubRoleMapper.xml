@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.HubRoleMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.HubRole">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="complexResultMap" type="com.chenbro.deliverybarcode.model.HubRole">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <collection property="permissions" ofType="com.chenbro.deliverybarcode.model.HubPermission">
+            <id column="permId" property="uuid" jdbcType="VARCHAR"/>
+            <result column="permName" property="name" jdbcType="VARCHAR"/>
+            <result column="type" property="type" jdbcType="INTEGER"/>
+            <result column="code" property="code" jdbcType="VARCHAR"/>
+            <result column="permDescription" property="description" jdbcType="VARCHAR"/>
+            <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    uuid, name, description, op_user, create_time, update_user, update_time,del_flag
+  </sql>
+
+    <select id="findUnionByUUid" resultMap="complexResultMap" parameterType="java.lang.String">
+        select
+        r.*,p.uuid permId,p.type type ,p.code code,p.name permName,p.description permDescription,p.parent_id parent_id
+        from hub_role r,hub_permission p, hub_role_permission rp
+        where r.uuid = #{uuid,jdbcType=VARCHAR} and r.uuid = rp.role_id and p.uuid = rp.permission_id and r.del_flag is null and rp.del_flag is null
+    </select>
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from hub_role
+        where uuid = #{uuid,jdbcType=VARCHAR} and del_flag is null
+    </select>
+
+    <select id="findAll" resultMap="complexResultMap">
+        select
+        r.*,p.uuid permId,p.type type ,p.code code,p.name permName,p.description permDescription,p.parent_id parent_id
+        from hub_role r left join hub_role_permission rp on r.uuid = rp.role_id left join hub_permission p on p.uuid = rp.permission_id
+        where r.del_flag is null and rp.del_flag is null
+    </select>
+
+    <select id="findAllUnion" resultMap="complexResultMap">
+        select
+        r.*,p.uuid permId,p.type type ,p.code code,p.description permDescription,p.parent_id parent_id
+        from hub_role r left join hub_role_permission rp on r.uuid = rp.role_id left join hub_permission p on p.uuid = rp.permission_id
+        where r.del_flag is null and rp.del_flag is null
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hub_role
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="assignRolePerm">
+        insert into hub_role_permission (uuid, role_id, permission_id, op_user, create_time) values
+        (#{id,jdbcType=VARCHAR},#{role.uuid,jdbcType=VARCHAR},#{permission.uuid,jdbcType=VARCHAR},#{createBy,jdbcType=VARCHAR},#{createDate,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insert" parameterType="com.chenbro.deliverybarcode.model.HubRole">
+        insert into hub_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.HubRole">
+        update hub_role
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

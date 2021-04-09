@@ -74,4 +74,6 @@ public class ReportsController {
         return new Result(ResultCode.SUCCESS,pallets);
     }
 
+
+
 }

@@ -2,6 +2,8 @@ package com.chenbro.deliverybarcode.service;
 
 import com.chenbro.deliverybarcode.model.*;
 import com.chenbro.deliverybarcode.model.base.Result;
+import com.chenbro.deliverybarcode.model.response.MonitorInfo;
+import com.chenbro.deliverybarcode.model.response.ProductsInfoResult;
 import com.chenbro.deliverybarcode.service.base.IBaseService;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public interface IBoxService extends IBaseService<Box> {
     * @return com.chenbro.deliverybarcode.model.base.Result
     **/
     Result shipping(Box box);
+
 
     /**
     * @Description //TODO 查詢所有 倉庫收貨狀態的 裝箱單
@@ -84,6 +87,45 @@ public interface IBoxService extends IBaseService<Box> {
     * @return java.util.List<com.chenbro.deliverybarcode.model.Box>
     **/
     List<Box> queryReportByCond(DeliveryQueryCond deliveryQueryCond);
+
+
+    /**
+    * @Description //TODO 查询昨天已扫码出货的数据
+    * @Date 2020/7/29 14:27
+    * @return java.util.List<com.chenbro.deliverybarcode.model.Box>
+    **/
+    List<ProductsInfoResult> yesterdayShippedBoxes();
+
+    /**
+    * @Description //TODO 未出货数据
+    * @Date 2020/11/13 8:26
+    * @return
+    **/
+    List<ProductsInfoResult>  delayShippedBoxes();
+
+    /**
+    * @Description //TODO  查询当前线别实时生产数据
+    * @Date 2020/8/7 13:17
+    * @return java.util.List<com.chenbro.deliverybarcode.model.response.MonitorInfo>
+    **/
+    List<MonitorInfo> queryMonitorInfos(String prodLineId);
+
+    List<MonitorInfo> queryUncompletedInfos(String prodLineId);
+
+    /**
+    * @Description //TODO 根據條件查詢浪潮接口信息
+    * @Date 2020/9/24 14:11
+    * @return com.chenbro.deliverybarcode.model.base.Result
+    **/
+    Result findInspurInfo(InspurQueryCond inspurQueryCond);
+
+    Result currentPallet();
+
+
+    Result disconnectBox(String barcode, String username);
+
+
+
 
 
 }

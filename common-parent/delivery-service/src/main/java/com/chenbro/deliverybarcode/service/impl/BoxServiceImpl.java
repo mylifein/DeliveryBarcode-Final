@@ -1,15 +1,21 @@
 package com.chenbro.deliverybarcode.service.impl;
 
 import com.chenbro.deliverybarcode.model.*;
+import com.chenbro.deliverybarcode.model.base.BarcodeType;
 import com.chenbro.deliverybarcode.model.base.BoxStatus;
 import com.chenbro.deliverybarcode.model.base.Result;
 import com.chenbro.deliverybarcode.model.base.ResultCode;
+import com.chenbro.deliverybarcode.model.response.InspurCT;
+import com.chenbro.deliverybarcode.model.response.MonitorInfo;
+import com.chenbro.deliverybarcode.model.response.ProductsInfoResult;
 import com.chenbro.deliverybarcode.service.IBoxService;
 import com.chenbro.deliverybarcode.service.base.BaseServiceImpl;
+import com.chenbro.deliverybarcode.utils.BarcodeHistoryUtils;
 import com.chenbro.deliverybarcode.utils.DateUtils;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -315,5 +321,58 @@ public class BoxServiceImpl extends BaseServiceImpl<Box> implements IBoxService 
         return boxMapper.queryReportByCond(deliveryQueryCond);
     }
 
+    @Override
+    public List<ProductsInfoResult> yesterdayShippedBoxes() {
+        return boxMapper.yesterdayShippedBoxes();
+    }
 
+
+    @Override
+    public List<ProductsInfoResult> delayShippedBoxes() {
+        return boxMapper.delayShippedBoxes();
+    }
+
+    @Override
+    public List<MonitorInfo> queryMonitorInfos(String prodLineId) {
+        return boxMapper.queryMonitorInfos(prodLineId);
+    }
+
+    @Override
+    public List<MonitorInfo> queryUncompletedInfos(String prodLineId) {
+        return boxMapper.queryUncompletedInfos(prodLineId);
+    }
+
+    @Override
+    public Result findInspurInfo(InspurQueryCond inspurQueryCond) {
+        List<InspurCT> inspurInfo = boxMapper.findInspurInfo(inspurQueryCond);
+        return new Result(ResultCode.SUCCESS,inspurInfo);
+    }
+
+
+    @Override
+    public Result currentPallet() {
+        return new Result(ResultCode.SUCCESS,boxMapper.currentPallet());
+    }
+
+    @Override
+    public Result disconnectBox(String barcode, String opUser) {
+        //1.判断当前barcode 是否为箱号标签 ,若箱号标签为空，则判断箱号标签无效.
+        Box box = boxMapper.findById(barcode);
+        if(box == null){
+            return new Result(ResultCode.INVALIDID);
+        }else{
+            if(BoxStatus.DETROYED.getValue().equals(box.getCartonStatus())){
+                return new Result(ResultCode.STATUSREPEAT);
+            }
+            box.setCartonStatus(BoxStatus.DETROYED.getValue());
+            box.setUpdateBy(opUser);
+            box.setUpdateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            box.setDelFlag("1");
+            boxMapper.deleteBox(box);                           //删除箱号信息
+            boxMapper.deleteBoxRelCts(box);                     //删除箱号关联的底座信息
+            BarcodeHistory barcodeHistory = BarcodeHistoryUtils.buildBarcodeHistory(box.getCartonNo(),BoxStatus.DETROYED.getValue(),opUser, BarcodeType.BOX);
+            barcodeHistoryMapper.insert(barcodeHistory);
+            return new Result(ResultCode.SUCCESS);
+        }
+    }
 }

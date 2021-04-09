@@ -1,5 +1,11 @@
 package com.chenbro.deliverybarcode.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * @ClassName IdWorkder
  * @Description TODO
@@ -129,12 +135,21 @@ public class IdWorkder {
     }
 
 
-    public static void main(String[] args){
-        IdWorkder idWorkder = new IdWorkder(10,10);
-        for(int i = 0;i < 1000; i++){
-            long id = idWorkder.nextId();
-            String idString = "" + id;
-            System.out.println(id + "length:"+ idString.length());
-        }
+    public static void main(String[] args) throws ParseException {
+//        IdWorkder idWorkder = new IdWorkder(10,10);
+//        for(int i = 0;i < 1000; i++){
+//            long id = idWorkder.nextId();
+//            String idString = "" + id;
+//            System.out.println(id + "length:"+ idString.length());
+//        }
+        System.out.println("---- Current Code" + ConstantsUtil.INTTOCODEINSPUR.get(12));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse("2020-10-09");
+        Calendar now = Calendar.getInstance();
+        now.setTime(date);
+        String yearLast = new SimpleDateFormat("yy", Locale.CHINESE).format(now.getTime());
+        System.out.println("String Year:" + yearLast + "; Integer Year: " +  Integer.parseInt(yearLast));
+        System.out.println("---- DAY:" );
+        System.out.println("Current Code:" + UuidUtils.getInspurCode(now));
     }
 }

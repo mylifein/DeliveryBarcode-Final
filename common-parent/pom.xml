@@ -44,6 +44,12 @@
         <aspectj.version>1.5.4</aspectj.version>
         <jwt.version>0.6.0</jwt.version>
         <poi.version>4.0.1</poi.version>
+        <spring-Context.version>5.2.2.RELEASE</spring-Context.version>
+        <spring-Beans.version>5.2.4.RELEASE</spring-Beans.version>
+        <jsReport.version>6.12.2</jsReport.version>
+        <lowagie.version>2.1.7</lowagie.version>
+        <javaMail.version>1.6.2</javaMail.version>
+        <commonsMail.version>1.4</commonsMail.version>
     </properties>
 
     <!-- 公共依赖 -->

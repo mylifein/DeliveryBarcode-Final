@@ -1,14 +1,19 @@
 package com.chenbro.deliverybarcode.api.controller;
 
 import com.chenbro.deliverybarcode.model.Box;
+import com.chenbro.deliverybarcode.model.HubUser;
+import com.chenbro.deliverybarcode.model.InspurQueryCond;
 import com.chenbro.deliverybarcode.model.User;
 import com.chenbro.deliverybarcode.model.base.Result;
 import com.chenbro.deliverybarcode.model.base.ResultCode;
 import com.chenbro.deliverybarcode.service.IBoxService;
 import com.chenbro.deliverybarcode.service.IPalletService;
+import com.chenbro.deliverybarcode.service.IWoBatchService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +33,9 @@ public class BoxController {
 
     @Autowired
     private IPalletService palletService;
+
+    @Autowired
+    private IWoBatchService woBatchService;
 
     /**
      * @return java.lang.String
@@ -101,5 +109,30 @@ public class BoxController {
     public Result replyUpdate(@PathVariable("barcode") String barcode,@RequestBody Map<String,String> map){
         return palletService.replyUpdate(barcode,map.get("statusCode"));
     }
+
+
+    @RequestMapping(value = "distributeBatchNo",method = {RequestMethod.POST})
+    @ResponseBody
+    public Result distributeBatchNo(@RequestBody Map<String,String> map){
+        // @RequestParam("uniqueNo") String uniqueNo, @RequestParam("productType") String productType
+        return woBatchService.distributeBatchNo(map.get("uniqueNo"), map.get("productType"), "API");
+    }
+
+
+    @RequestMapping(value = "ct",method = {RequestMethod.POST,RequestMethod.GET})
+    public Result queryCTcodeInfo(@RequestBody Map<String,Object> map){
+        InspurQueryCond inspurQueryCond = new InspurQueryCond();
+        List<String> cusNos = new ArrayList<>();
+        cusNos.add("39264");
+        cusNos.add("59866");
+        inspurQueryCond.setCusNos(cusNos);
+        inspurQueryCond.setDelMatnos((List<String>)map.get("delMatnos"));
+        inspurQueryCond.setStatus((String)map.get("status"));
+        inspurQueryCond.setFromTime((String)map.get("from"));
+        inspurQueryCond.setToTime((String)map.get("to"));
+        return boxService.findInspurInfo(inspurQueryCond);
+    }
+
+
 
 }

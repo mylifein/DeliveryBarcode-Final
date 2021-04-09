@@ -81,6 +81,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/box/distributeBatch.do" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>工单批次分配</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="${pageContext.request.contextPath}/checkOrder/query.do" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>质检工单信息</p>
@@ -142,6 +148,24 @@
                             <a href="${pageContext.request.contextPath}/box/outstore.do" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>仓库出库</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/box/qualityCheck.do" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>品保质检</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/box/destroyPallet.do" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>栈板作废</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="${pageContext.request.contextPath}/box/destroyBox.do" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>装箱作废</p>
                             </a>
                         </li>
                     </ul>

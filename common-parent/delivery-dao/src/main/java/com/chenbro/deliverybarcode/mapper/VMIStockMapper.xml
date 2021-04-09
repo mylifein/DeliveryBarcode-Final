@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.VMIStockMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.VMIStock">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="cus_matno" property="cusMatno" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="dn" property="dn" jdbcType="VARCHAR"/>
+        <result column="prod_name" property="prodName" jdbcType="VARCHAR"/>
+        <result column="prod_qty" property="prodQty" jdbcType="INTEGER"/>
+        <result column="wm_name" property="wmName" jdbcType="VARCHAR"/>
+        <result column="store_date" property="storeDate" jdbcType="DATE"/>
+        <result column="stock_days" property="stockDays" jdbcType="INTEGER"/>
+        <result column="plan_due" property="planDue" jdbcType="VARCHAR"/>
+        <result column="prod_owner" property="prodOwner" jdbcType="VARCHAR"/>
+        <result column="supplier" property="supplier" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        uuid, cus_matno, del_matno, dn, prod_name, prod_qty, wm_name, store_date, stock_days, plan_due, prod_owner, supplier, prod_prop, remark, op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from vmi_stock
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from vmi_stock
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.VMIStock">
+        update vmi_stock
+        <set>
+            <if test="cusMatno != null">
+                cus_matno = #{cusMatno,jdbcType=VARCHAR},
+            </if>
+            <if test="delMatno != null">
+                del_matno = #{delMatno,jdbcType=INTEGER},
+            </if>
+            <if test="dn != null">
+                dn = #{dn,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null">
+                prod_name = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="prodQty != null">
+                prod_qty = #{prodQty,jdbcType=VARCHAR},
+            </if>
+            <if test="wmName != null">
+                wm_name = #{wmName,jdbcType=VARCHAR},
+            </if>
+            <if test="storeDate != null">
+                store_date = #{storeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="stockDays != null">
+                stock_days = #{stockDays,jdbcType=VARCHAR},
+            </if>
+            <if test="planDue != null">
+                plan_due = #{planDue,jdbcType=VARCHAR},
+            </if>
+            <if test="prodOwner != null">
+                prod_owner = #{prodOwner,jdbcType=VARCHAR},
+            </if>
+            <if test="supplier != null">
+                supplier = #{supplier,jdbcType=VARCHAR},
+            </if>
+            <if test="prodProp != null">
+                prod_prop = #{prodProp,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="findAll" resultMap="BaseResultMap" parameterType="com.chenbro.deliverybarcode.model.VMIStock">
+        select
+        <include refid="Base_Column_List"/>
+        from vmi_stock
+        <where>
+            del_flag is null
+            <if test="cusMatno != null">
+                and cus_matno = #{cusMatno,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <select id="queryPalletReportByCond" resultMap="BaseResultMap"
+            parameterType="com.chenbro.deliverybarcode.model.PalletQueryCond">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info where del_flag is null
+        <if test="palletNo != null and palletNo != ''">
+            and palletNo = #{palletNo,jdbcType=VARCHAR}
+        </if>
+        <if test="workNo != null and workNo != ''">
+            and work_no = #{workNo,jdbcType=VARCHAR}
+        </if>
+        <if test="batchNo != null and batchNo != ''">
+            and batchNo = #{batchNo,jdbcType=VARCHAR}
+        </if>
+        <if test="cusMatno != null and cusMatno != ''">
+            and cus_matno = #{cusMatno,jdbcType=VARCHAR}
+        </if>
+        <if test="delMatno != null and delMatno != ''">
+            and del_matno = #{delMatno,jdbcType=VARCHAR}
+        </if>
+        <if test="soOrder != null and soOrder != ''">
+            and so_order = #{soOrder,jdbcType=VARCHAR}
+        </if>
+        <if test="cusPo != null and cusPo != ''">
+            and cus_po = #{cusPo,jdbcType=VARCHAR}
+        </if>
+        <if test="vehicleNo != null and vehicleNo != ''">
+            and vehicle_No = #{vehicleNo,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != ''">
+            and status = #{status,jdbcType=VARCHAR}
+        </if>
+        <if test="createdStartTime != null and createdStartTime != ''">
+            and create_time &gt;=#{createdStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createdEndTime != null and createdEndTime != ''">
+            and <![CDATA[create_time <= #{createdEndTime,jdbcType=VARCHAR}]]>
+        </if>
+        <if test="updatedStartTime != null and updatedStartTime != ''">
+            and <![CDATA[update_time >= #{updatedStartTime,jdbcType=VARCHAR}]]>
+        </if>
+        <if test="updatedEndTime != null and updatedEndTime != ''">
+            and <![CDATA[update_time <= #{updatedEndTime,jdbcType=VARCHAR}]]>
+        </if>
+        order by create_time desc
+    </select>
+
+
+
+
+    <insert id="insert" parameterType="com.chenbro.deliverybarcode.model.VMIStock">
+        insert into vmi_stock
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="cusMatno != null">
+                cus_matno,
+            </if>
+            <if test="delMatno != null">
+                del_matno,
+            </if>
+            <if test="dn != null">
+                dn,
+            </if>
+            <if test="prodName != null">
+                prod_name,
+            </if>
+            <if test="prodQty != null">
+                prod_qty,
+            </if>
+            <if test="wmName != null">
+                wm_name,
+            </if>
+            <if test="storeDate != null">
+                store_date,
+            </if>
+            <if test="stockDays != null">
+                stock_days,
+            </if>
+            <if test="planDue != null">
+                plan_due,
+            </if>
+            <if test="prodOwner != null">
+                prod_owner,
+            </if>
+            <if test="supplier != null">
+                supplier,
+            </if>
+            <if test="prodProp != null">
+                prod_prop,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="cusMatno != null">
+                #{cusMatno,jdbcType=VARCHAR},
+            </if>
+            <if test="delMatno != null">
+                #{delMatno,jdbcType=INTEGER},
+            </if>
+            <if test="dn != null">
+                #{dn,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null">
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="prodQty != null">
+                #{prodQty,jdbcType=VARCHAR},
+            </if>
+            <if test="wmName != null">
+                #{wmName,jdbcType=VARCHAR},
+            </if>
+            <if test="storeDate != null">
+                #{storeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="stockDays != null">
+                #{stockDays,jdbcType=VARCHAR},
+            </if>
+            <if test="planDue != null">
+                #{planDue,jdbcType=VARCHAR},
+            </if>
+            <if test="prodOwner != null">
+                #{prodOwner,jdbcType=VARCHAR},
+            </if>
+            <if test="supplier != null">
+                #{supplier,jdbcType=VARCHAR},
+            </if>
+            <if test="prodProp != null">
+                #{prodProp,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

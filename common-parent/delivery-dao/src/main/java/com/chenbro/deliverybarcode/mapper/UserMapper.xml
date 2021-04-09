@@ -16,8 +16,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    uuid, user_id, username, password, userdesc, department, op_user, create_time, update_time,del_flag
-  </sql>
+        uuid, user_id, username, password, userdesc, department, op_user, create_time, update_time,del_flag
+    </sql>
 
     <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
@@ -50,9 +50,9 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_user
-    where uuid = #{uuid,jdbcType=VARCHAR}
-  </delete>
+        delete from t_user
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
 
 
 </mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.HubResourcesMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.HubResources">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="res_key" property="resKey" jdbcType="VARCHAR"/>
+        <result column="res_value" property="resValue" jdbcType="VARCHAR"/>
+        <result column="sort_num" property="sortNum" jdbcType="INTEGER"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, res_key, res_value, sort_num, op_user, create_time, update_user, update_time,del_flag
+  </sql>
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from hub_resources
+        where uuid = #{uuid,jdbcType=VARCHAR} and del_flag is null
+    </select>
+
+    <select id="findAllAsc" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from hub_resources where del_flag is null order by sort_num asc
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from hub_resources
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+
+
+    <insert id="insert" parameterType="com.chenbro.deliverybarcode.model.HubResources">
+        insert into hub_resources
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="resKey != null">
+                res_key,
+            </if>
+            <if test="resValue != null">
+                res_value,
+            </if>
+            <if test="sortNum != null">
+                sort_num,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_user,
+            </if>
+            <if test="updateDate != null">
+                update_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="resKey != null">
+                #{resKey,jdbcType=VARCHAR},
+            </if>
+            <if test="resValue != null">
+                #{resValue,jdbcType=VARCHAR},
+            </if>
+            <if test="sortNum != null">
+                #{sortNum,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.HubResources">
+        update hub_resources
+        <set>
+            <if test="resKey != null">
+                res_key = #{resKey,jdbcType=VARCHAR},
+            </if>
+            <if test="resValue != null">
+                res_value = #{resValue,jdbcType=VARCHAR},
+            </if>
+            <if test="sortNum != null">
+                sort_num = #{sortNum,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -474,7 +474,6 @@
       type: 'GET',
       dataType: 'json',
       success: function (data) {
-        console.log(data);
         if (data.success) {
 
           console.log("success");

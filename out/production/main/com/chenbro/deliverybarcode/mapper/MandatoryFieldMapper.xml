@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.MandatoryFieldMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.MandatoryField">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="man_no" property="manNo" jdbcType="VARCHAR"/>
+        <result column="man_desc" property="manDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <resultMap id="UnionResultMap" type="com.chenbro.deliverybarcode.model.MandatoryField">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="man_no" property="manNo" jdbcType="VARCHAR"/>
+        <result column="man_desc" property="manDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <collection property="fieldTypes" ofType="com.chenbro.deliverybarcode.model.FieldType">
+            <id column="fieldId" property="uuid" jdbcType="VARCHAR"/>
+            <result column="field_no" property="fieldNo" jdbcType="VARCHAR"/>
+            <result column="field_name" property="fieldName" jdbcType="VARCHAR"/>
+            <result column="field_value" property="fieldValue" jdbcType="VARCHAR"/>
+            <result column="field_desc" property="fieldDesc" jdbcType="VARCHAR"/>
+            <result column="fieldCreateBy" property="createBy" jdbcType="VARCHAR"/>
+            <result column="fieldCreateTime" property="createDate" jdbcType="VARCHAR"/>
+            <result column="fieldUpdateBy" property="updateBy" jdbcType="VARCHAR"/>
+            <result column="fieldUpdateTime" property="updateDate" jdbcType="VARCHAR"/>
+            <result column="fieldflag" property="delFlag" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        uuid, man_no, man_desc,op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_mandatory_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findByCtNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_mandatory_info
+        where ct_code = #{ctNumber,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="findDetailByUUId" resultMap="UnionResultMap" parameterType="java.lang.String">
+        select
+        a.uuid,a.man_no,a.man_desc,a.op_user,a.create_time,a.update_user,a.update_time,a.del_flag,c.uuid fieldId,
+        c.field_no,c.field_name,c.field_value,c.field_desc,c.op_user fieldCreateBy,c.create_time fieldCreateTime,c.update_user fieldUpdateBy,c.update_time fieldUpdateTime,c.del_flag fieldflag
+        from t_mandatory_info a left join t_mand_relfieldtype b on a.man_no = b.man_no left join t_field_type c on b.field_no = c.field_no where a.uuid=#{uuid,jdbcType=VARCHAR} and b.del_flag is null
+    </select>
+
+
+    <select id="findDetailByManNo" resultMap="UnionResultMap" parameterType="java.lang.String">
+        select
+        a.uuid,a.man_no,a.man_desc,a.op_user,a.create_time,a.update_user,a.update_time,a.del_flag,c.uuid fieldId,
+        c.field_no,c.field_name,c.field_value,c.field_desc,c.op_user fieldCreateBy,c.create_time fieldCreateTime,c.update_user fieldUpdateBy,c.update_time fieldUpdateTime,c.del_flag fieldflag
+        from t_mandatory_info a left join t_mand_relfieldtype b on a.man_no = b.man_no left join t_field_type c on b.field_no = c.field_no where a.man_no=#{manNo,jdbcType=VARCHAR} and b.del_flag is null
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_mandatory_info
+        where del_flag is null order by man_no
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_carton_info
+    where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+
+
+</mapper>

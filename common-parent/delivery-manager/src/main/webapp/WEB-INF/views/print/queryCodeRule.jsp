@@ -11,7 +11,8 @@
     <title>CHENBRO | Barcode</title>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/barcode.ico" type="image/x-icon">
     <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/bootTree/css/default.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/fontawesome-free/css/v4-shims.min.css">
     <!-- Toastr -->
@@ -77,19 +78,23 @@
                                 <div class="form-group row">
                                     <label for="ruleCreateBy" class="col-sm-2 col-form-label">创建者</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="ruleCreateBy" id="ruleCreateBy" readonly>
+                                        <input type="text" class="form-control" name="ruleCreateBy" id="ruleCreateBy"
+                                               readonly>
                                     </div>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="ruleCreateTime" id="ruleCreateTime" readonly>
+                                        <input type="text" class="form-control" name="ruleCreateTime"
+                                               id="ruleCreateTime" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="ruleUpdateBy" class="col-sm-2 col-form-label">修改者</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="ruleUpdateBy" id="ruleUpdateBy" readonly>
+                                        <input type="text" class="form-control" name="ruleUpdateBy" id="ruleUpdateBy"
+                                               readonly>
                                     </div>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control" name="ruleUpdateTime" id="ruleUpdateTime" readonly>
+                                        <input type="text" class="form-control" name="ruleUpdateTime"
+                                               id="ruleUpdateTime" readonly>
                                     </div>
                                 </div>
                                 <!-- modal table show -->
@@ -144,31 +149,96 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">修改角色</h4>
+                        <h4 class="modal-title">修改规则详细信息</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal" id="updateUserForm">
                             <div class="card-body">
-                                <div class="form-group row">
-                                    <label for="name" class="col-sm-2 col-form-label">角色名</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="name" id="name"
-                                               placeholder="仓库管理员">
+                                <div class="card-body">
+                                    <form class="form-horizontal" id="updateCodeRuleForm">
+                                    <div class="form-group row">
+                                        <label for="upRuleNo" class="col-sm-2 col-form-label">規則编号</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="uuid" id="upUuid" hidden>
+                                            <input type="text" class="form-control" name="ruleNo" id="upRuleNo"
+                                                   readonly>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="description" class="col-sm-2 col-form-label">角色描述</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="description" id="description"
-                                               placeholder="负责管理出入库">
+                                    <div class="form-group row">
+                                        <label for="upRuleDesc" class="col-sm-2 col-form-label">規則描述</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="ruleDesc" id="upRuleDesc">
+                                        </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label for="upRuleCreateBy" class="col-sm-2 col-form-label">创建者</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="ruleCreateBy"
+                                                   id="upRuleCreateBy" readonly>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="ruleCreateTime"
+                                                   id="upRuleCreateTime" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="upRuleUpdateBy" class="col-sm-2 col-form-label">修改者</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="ruleUpdateBy"
+                                                   id="upRuleUpdateBy" readonly>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="ruleUpdateTime"
+                                                   id="upRuleUpdateTime" readonly>
+                                        </div>
+                                    </div>
+                                    </form>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 right">
+                                            <button class="btn btn-info btn-sm" id="addRuleContentBtn">
+                                                <i class="fas fa-pencil-alt">
+                                                </i>
+                                                新增
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <form id="ruleContentsForm">
+                                    <!-- modal table show -->
+                                    <div class="form-group row">
+                                        <table class="table table-striped projects">
+                                            <thead>
+                                            <tr>
+                                                <th style="width: 10%">
+                                                    #
+                                                </th>
+                                                <th style="width: 20%">
+                                                    規則類型
+                                                </th>
+                                                <th style="width: 15%">
+                                                    規則值
+                                                </th>
+                                                <th style="width: 15%">
+                                                    規則長度
+                                                </th>
+                                                <th style="width: 12%">
+                                                    创建者
+                                                </th>
+                                                <th style="width: 12%">
+                                                    修改者
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="updateDetailBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    </form>
                                 </div>
                             </div>
 
-                        </form>
+
 
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -250,18 +320,18 @@
                                         ${codeRule.createBy}
                                     <br/>
                                     <small>
-                                        ${codeRule.createDate}
+                                            ${codeRule.createDate}
                                     </small>
                                 </td>
                                 <td>
-                                    ${codeRule.updateBy}
+                                        ${codeRule.updateBy}
                                     <br/>
                                     <small>
-                                        ${codeRule.updateDate}
+                                            ${codeRule.updateDate}
                                     </small>
                                 </td>
                                 <td class="project-actions text-right">
-                                    <button class="btn btn-info btn-sm"  onclick="edit('${codeRule.uuid}')">
+                                    <button class="btn btn-info btn-sm" onclick="edit('${codeRule.uuid}')">
                                         <i class="fas fa-pencil-alt">
                                         </i>
                                         编辑
@@ -364,61 +434,99 @@
             showConfirmButton: false,
             timer: 3000
         });
-        $('#addBtn').click(function () {
+        $('#updateBtn').click(function () {
+            var ruleContents = getFormJson($("#ruleContentsForm"));
+            var codeRule = getFormJson($("#updateCodeRuleForm"));
+            var count = 0;
+            if(!$.isEmptyObject(codeRule)){
+                count = $.isArray(ruleContents["sequence"]) ? ruleContents["sequence"].length : 1;
+            }
+            var jsonArr = new Array();
+            for(var i = 0; i < count ; i++){
+                var jsonObj = {};
+                for(var item in ruleContents) {
+                    jsonObj[item] = ruleContents[item][i];
+                }
+                jsonArr.push(jsonObj);
+            }
+            codeRule["ruleContents"] = jsonArr;
             $.ajax({
-                url: '${pageContext.request.contextPath}/role/add.do',
-                data: $('#addUserForm').serialize(),           //序列化表单数据，格式为name=value
+                url: '${pageContext.request.contextPath}/rule/updateCodeRule.do',
+                data: JSON.stringify(codeRule),           //序列化表单数据，格式为name=value
                 type: 'POST',
+                contentType : 'application/json;charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     if (data.success) {
-                        window.location.href = '${pageContext.request.contextPath}/role/query.do';
+                        Toast.fire({
+                            type: 'success',
+                            title: '更新成功'
+                        });
+                        $('#modal-lg2').modal('hide');
                     } else {
                         Toast.fire({
                             type: 'warning',
-                            title: '保存失败,' + data.message
+                            title: '更新失败,失败原因：' + data.message
                         })
                     }
                 },
                 error: function () {
                     Toast.fire({
                         type: 'warning',
-                        title: '保存Error'
+                        title: '更新Error，请检查是否登录超时'
                     })
                 }
 
-            })
-        })
+            });
+        });
 
+        $('#addRuleContentBtn').click(function () {
+            var rowElement = '<tr><td><input type="text" name="uuid" hidden value=""><input type="text" style="width: 30px" name="sequence" value=""></td><td><select name="typeNo" style="width: 150px"><option value="T001" >客戶PO或工單號</option><option value="T002" >年周</option><option value="T003" >客戶料號</option><option value="T004" >正式編號</option><option value="T005" >版本</option><option value="T006" >流水號</option><option value="T007" >自定義</option><option value="T008" >销售订单</option><option value="T009" >幾種號3到7位</option><option value="T010" >生產線別</option><option value="T011" >流水碼16進制</option><option value="T012" >校驗碼43</option><option value="T013" >十進制流水碼</option><option value="T014" >年月日進制表示</option><option value="T015" >浪潮年月日</option><option value="T016" >浪潮批次号</option><option value="T017" >自定義十進制批次</option><option value="T018" >H3C年月日</option><option value="T019" >工单十进制流水</option><option value="T020">工单数量</option><option value="T021" >单箱底座条码</option><option value="T022" >标准顺达流水码</option></select></td><td><input type="text" name="ruleContents.ruleValue" style="width: 100px" value=""></td><td><input type="text" name="ruleLength" style="width: 40px" value=""></td><td><br/><small></small></td><td><a href="#" onclick="removeRow(this)"><i class="fa fa-trash text-warning"></i> 删除</a></td></tr>'
+            $("#updateDetailBody").append(rowElement) ;
+        });
 
     });
-    function edit(uuid){
-        <%--$.get("${pageContext.request.contextPath}/role/find.do?" ,function (data,status) {--%>
 
-        <%--});--%>
-        console.log("进入edit method" + uuid);
+    function edit(uuid) {
         $.ajax({
-            url: '${pageContext.request.contextPath}/role/find.do',
-            data:{'uuid':uuid},           //序列化表单数据，格式为name=value
+            url: '${pageContext.request.contextPath}/rule/queryCodeRuleDetail.do',
+            data: {'uuid': uuid},           //序列化表单数据，格式为name=value
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                console.log(data);
                 if (data.success) {
+                    var ruleInfo = data.data;
+                    //  編碼規則 详细信息
+                    $('#upRuleNo').val(ruleInfo.ruleNo);
+                    $('#upRuleDesc').val(ruleInfo.ruleDesc);
+                    $('#upRuleCreateBy').val(ruleInfo.createBy);
+                    $('#upRuleCreateTime').val(ruleInfo.createDate);
+                    $('#upRuleUpdateBy').val(ruleInfo.updateBy);
+                    $('#upRuleUpdateTime').val(ruleInfo.updateDate);
+                    $('#upUuid').val(ruleInfo.uuid);
+                    // 編碼規則詳細信息
 
-                    console.log("success");
+                    //拼接字符串innerHtml
+                    var innerElement = '';
+                    $('#updateDetailBody').html('');
+                    for (var i = 0; i < ruleInfo.ruleContents.length; i++) {
+                        var ruleContent = ruleInfo.ruleContents[i];
+                        var ruleType = ruleContent.ruleType;
+                        innerElement += '<tr><td><input type="text" name="uuid" hidden value="' +  ruleContent.uuid +'"><input type="text" style="width: 30px" name="sequence" value="' + ruleContent.sequence + '"></td><td><select name="typeNo" style="width: 150px"><option value="T001" ' + (ruleContent.typeNo == "T001" ? "selected=selected" : "") + '>客戶PO或工單號</option><option value="T002" ' + (ruleContent.typeNo == "T002" ? "selected=selected" : "") + '>年周</option><option value="T003" ' + (ruleContent.typeNo == "T003" ? "selected=selected" : "") + '>客戶料號</option><option value="T004" ' + (ruleContent.typeNo == "T004" ? "selected=selected" : "") + '>正式編號</option><option value="T005" ' + (ruleContent.typeNo == "T005" ? "selected=selected" : "") + '>版本</option><option value="T006" ' + (ruleContent.typeNo == "T006" ? "selected=selected" : "") + '>流水號</option><option value="T007" ' + (ruleContent.typeNo == "T007" ? "selected=selected" : "") + '>自定義</option><option value="T008" ' + (ruleContent.typeNo == "T008" ? "selected=selected" : "") + '>销售订单</option><option value="T009" ' + (ruleContent.typeNo == "T009" ? "selected=selected" : "") + '>幾種號3到7位</option><option value="T010" ' + (ruleContent.typeNo == "T010" ? "selected=selected" : "") + '>生產線別</option><option value="T011" ' + (ruleContent.typeNo == "T011" ? "selected=selected" : "") + '>流水碼16進制</option><option value="T012" ' + (ruleContent.typeNo == "T012" ? "selected=selected" : "") + '>校驗碼43</option><option value="T013" ' + (ruleContent.typeNo == "T013" ? "selected=selected" : "") + '>十進制流水碼</option><option value="T014" ' + (ruleContent.typeNo == "T014" ? "selected=selected" : "") + '>年月日進制表示</option><option value="T015" ' + (ruleContent.typeNo == "T015" ? "selected=selected" : "") + '>浪潮年月日</option><option value="T016" ' + (ruleContent.typeNo == "T016" ? "selected=selected" : "") + '>浪潮批次号</option><option value="T017" ' + (ruleContent.typeNo == "T017" ? "selected=selected" : "") + '>自定義十進制批次</option><option value="T018" ' + (ruleContent.typeNo == "T018" ? "selected=selected" : "") + '>H3C年月日</option><option value="T019" ' + (ruleContent.typeNo == "T019" ? "selected=selected" : "") + '>工单十进制流水</option><option value="T020" ' + (ruleContent.typeNo == "T020" ? "selected=selected" : "") + '>工单数量</option><option value="T021" ' + (ruleContent.typeNo == "T021" ? "selected=selected" : "") + '>单箱底座条码</option><option value="T022" ' + (ruleContent.typeNo == "T022" ? "selected=selected" : "") + '>标准顺达流水码</option></select></td><td><input type="text" name="ruleValue" style="width: 100px" value="' + ruleContent.ruleValue + '"></td><td><input type="text" name="ruleLength" style="width: 40px" value="' + ruleContent.ruleLength + '"></td><td>' + ruleContent.createBy + '<br/><small>' + ruleContent.createDate + '</small></td><td><a href="#" onclick="removeRow(this)"><i class="fa fa-trash text-warning"></i> 删除</a></td></tr>'
+                    }
+                    $('#updateDetailBody').html(innerElement);
+                    $('#modal-lg2').modal();
                 } else {
                     Toast.fire({
                         type: 'warning',
-                        title: '保存失败,' + data.message
+                        title: '信息查詢失敗' + data.message
                     })
                 }
             },
             error: function () {
                 Toast.fire({
                     type: 'warning',
-                    title: '保存Error'
+                    title: '信息查詢失敗'
                 })
             }
 
@@ -433,7 +541,6 @@
             dataType: 'json',
             success: function (data) {
                 if (data.success) {
-                    console.log(data.data);
                     var ruleInfo = data.data;
                     //  編碼規則 详细信息
                     $('#ruleNo').val(ruleInfo.ruleNo);
@@ -449,7 +556,7 @@
                     $('#detailBody').html('');
                     for (let ruleContent of ruleInfo.ruleContents) {
                         var ruleType = ruleContent.ruleType;
-                        innerElement += '<tr><td>'+ ruleContent.sequence +'</td><td>' + ruleContent.typeNo + '</td><td>' + ruleType.typeDesc + '</td><td>' + ruleContent.ruleValue + '</td><td>' + ruleContent.ruleLength + '</td><td>' + ruleContent.createBy+ '<br/><small>' + ruleContent.createDate+ '</small></td><td>' + ruleContent.updateBy+ '<br/><small>' + ruleContent.updateDate+ '</small></td></tr>'
+                        innerElement += '<tr><td>' + ruleContent.sequence + '</td><td>' + ruleContent.typeNo + '</td><td>' + ruleType.typeDesc + '</td><td>' + ruleContent.ruleValue + '</td><td>' + ruleContent.ruleLength + '</td><td>' + ruleContent.createBy + '<br/><small>' + ruleContent.createDate + '</small></td><td>' + ruleContent.updateBy + '<br/><small>' + ruleContent.updateDate + '</small></td></tr>'
                     }
                     $('#detailBody').html(innerElement);
                     $('#modal-lg').modal();
@@ -471,7 +578,24 @@
         })
     }
 
-
+    function removeRow(row) {
+        $(row).parent().parent().remove();
+    }
+    function getFormJson(form) {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
 
 </script>
 </body>

@@ -24,6 +24,7 @@ public class PalletQueryCond implements Serializable {
     private String delMatno;
     private String soOrder;
     private String vehicleNo;
+    private String status;
     private String createdStartTime;
     private String createdEndTime;
     private String updatedStartTime;
@@ -140,5 +141,13 @@ public class PalletQueryCond implements Serializable {
 
     public void setUpdatedEndTime(String updatedEndTime) {
         this.updatedEndTime = updatedEndTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

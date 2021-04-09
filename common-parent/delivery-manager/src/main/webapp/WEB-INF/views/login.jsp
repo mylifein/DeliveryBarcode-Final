@@ -12,6 +12,7 @@
   <link rel="bookmark" href="${pageContext.request.contextPath}/images/barcode.ico" type="image/x-icon">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->

@@ -203,7 +203,6 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     if (data.success) {
                         if ($displayTable == null) {
                             $displayTable = initTable(data.data);

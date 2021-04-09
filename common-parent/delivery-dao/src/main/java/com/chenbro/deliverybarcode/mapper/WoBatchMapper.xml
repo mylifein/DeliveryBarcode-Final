@@ -14,12 +14,9 @@
     </resultMap>
 
 
-
-
     <sql id="Base_Column_List">
         uuid, work_no, batchNo, batchType,op_user, create_time,update_user, update_time,del_flag
     </sql>
-
 
 
     <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -68,5 +65,68 @@
         where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
 
+    <select id="findByBatchNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wo_batchno
+        where batchNo = #{batchNo,jdbcType=VARCHAR}
+    </select>
 
+    <select id="findByWorkNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_wo_batchno
+        where work_no = #{workNo,jdbcType=VARCHAR} and del_flag is null
+    </select>
+
+    <select id="findCurrentBatchNos" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+        batchNo
+        FROM t_wo_batchno
+        where batchNo like #{dateCode,jdbcType=VARCHAR} and del_flag is null order by create_time
+    </select>
+
+    <insert id="addWoBatch" parameterType="com.chenbro.deliverybarcode.model.WoBatch">
+        insert into t_wo_batchno
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="workNo != null">
+                work_no,
+            </if>
+            <if test="batchNo != null">
+                batchNo,
+            </if>
+            <if test="batchType != null">
+                batchType,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="workNo != null and workNo != ''">
+                #{workNo,jdbcType=VARCHAR},
+            </if>
+            <if test="batchNo != null and batchNo != ''">
+                #{batchNo,jdbcType=VARCHAR},
+            </if>
+            <if test="batchType != null and batchType != ''">
+                #{batchType,jdbcType=VARCHAR},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
 </mapper>

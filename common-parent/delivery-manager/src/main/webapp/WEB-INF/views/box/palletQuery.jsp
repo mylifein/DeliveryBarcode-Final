@@ -141,7 +141,7 @@
                         <!-- SEARCH FORM -->
                         <form action="${pageContext.request.contextPath}/pallet/query.do">
                             <div class="input-group input-group-sm">
-                                <input class="form-control form-control-sm" name="cusNo" type="search" placeholder="Search"
+                                <input class="form-control form-control-sm" name="palletNo" type="search" placeholder="Search"
                                        aria-label="Search">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">

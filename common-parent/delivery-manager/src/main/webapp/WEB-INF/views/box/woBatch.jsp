@@ -10,6 +10,8 @@
 
     <title>CHENBRO | Barcode</title>
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/barcode.ico" type="image/x-icon">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/bootTree/css/default.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/plugins/fontawesome-free/css/v4-shims.min.css">
     <!-- Toastr -->
@@ -254,25 +256,25 @@
     <%@include file="../footer.jsp" %>
 </div>
 <!-- ./wrapper -->
-<!-- Bootstrap 4 -->
-<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ./wrapper -->
+<!-- jQuery -->
+<script src="${pageContext.request.contextPath}/plugins/jquery/jquery.min.js"></script>
+<%--<script src="${pageContext.request.contextPath}/bootTree/js/jquery-2.1.0.min.js"></script>--%>
+<script src="${pageContext.request.contextPath}/bootTree/js/bootstrap-treeview.js"></script>
 <!-- SweetAlert2 -->
 <script src="${pageContext.request.contextPath}/plugins/sweetalert2/sweetalert2.min.js"></script>
 <!-- Toastr -->
 <script src="${pageContext.request.contextPath}/plugins/toastr/toastr.min.js"></script>
-<!-- select treeview -->
-<script src="${pageContext.request.contextPath}/bootTree/js/bootstrap-treeview.js"></script>
-<!-- bs-custom-file-input -->
-<script src="${pageContext.request.contextPath}/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<!-- Bootstrap -->
+<script src="${pageContext.request.contextPath}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-    });
-
-    $(function () {
+    $(function() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
         $('#updateBtn').click(function () {
             $.ajax({
                 url: '${pageContext.request.contextPath}/box/updateWoBatch.do',
@@ -280,6 +282,7 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function (data) {
+                    console.log(data)
                     if (data.success) {
                         window.location.href = '${pageContext.request.contextPath}/box/queryWoBatch.do';
                     } else {
@@ -299,8 +302,8 @@
             })
         })
 
-
     });
+
     function edit(uuid){
         $.ajax({
             url: '${pageContext.request.contextPath}/box/queryWoBatchById.do',
@@ -332,8 +335,6 @@
 
         })
     }
-
-
 
 </script>
 </body>

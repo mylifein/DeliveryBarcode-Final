@@ -76,6 +76,16 @@
     </resultMap>
 
 
+    <resultMap id="PalletInfoResultMap" type="com.chenbro.deliverybarcode.model.response.PalletInfoResult">
+        <id column="palletNo" property="palletNo" jdbcType="VARCHAR"/>
+        <result column="palletQty" property="palletQty" jdbcType="INTEGER"/>
+        <result column="cus_name" property="cusName" jdbcType="VARCHAR"/>
+        <result column="cus_matno" property="cusMatno" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="so_order" property="soOrder" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         uuid, palletNo, work_no, palletQty, batchNo, capacity_no, model_no, rule_no, cus_no,cus_name, cus_po, cus_matno, del_matno, so_order, vehicle_No, status, op_user, create_time,update_user, update_time,del_flag
     </sql>
@@ -93,6 +103,11 @@
         from t_pallet_info
         where palletNo = #{id,jdbcType=VARCHAR}
     </select>
+
+    <select id="yesterdayPalletUpdate" resultMap="PalletInfoResultMap">
+       select palletNo , palletQty , cus_name , cus_matno , del_matno , so_order , status from t_pallet_info where status != '3' and status != 'NG' and status != 'PASS' and TO_DAYS(NOW()) - TO_DAYS(update_time) = 1
+    </select>
+
 
     <select id="findDetailById" resultMap="BaseDetailResultMap">
         select
@@ -171,8 +186,8 @@
         from t_pallet_info
         <where>
             del_flag is null
-            <if test="cusNo != null">
-                and cus_no = #{cusNo,jdbcType=VARCHAR}
+            <if test="palletNo != null">
+                and palletNo = #{palletNo,jdbcType=VARCHAR}
             </if>
         </where> order by create_time desc
     </select>
@@ -207,6 +222,9 @@
         <if test="vehicleNo != null and vehicleNo != ''">
             and vehicle_No = #{vehicleNo,jdbcType=VARCHAR}
         </if>
+        <if test="status != null and status != ''">
+            and status = #{status,jdbcType=VARCHAR}
+        </if>
         <if test="createdStartTime != null and createdStartTime != ''">
             and create_time &gt;=#{createdStartTime,jdbcType=VARCHAR}
         </if>
@@ -221,4 +239,52 @@
         </if>
         order by create_time desc
     </select>
+
+
+    <select id="queryCurrentPallets" resultMap="BaseResultMap"
+            parameterType="com.chenbro.deliverybarcode.model.PalletQueryCond">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info where del_flag is null and status = '3'
+        <if test="currentDate != null and currentDate != ''">
+            and TO_DAYS(create_time) = TO_DAYS(#{currentDate,jdbcType=VARCHAR})
+        </if>
+        order by create_time desc
+    </select>
+
+    <update id="deletePalletRelCartons" parameterType="com.chenbro.deliverybarcode.model.Pallet">
+        update t_carton_pallet
+        <set>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where palletNo = #{palletNo,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deletePallet" parameterType="com.chenbro.deliverybarcode.model.Pallet">
+        update t_pallet_info
+        <set>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where palletNo = #{palletNo,jdbcType=VARCHAR}
+    </update>
+
 </mapper>

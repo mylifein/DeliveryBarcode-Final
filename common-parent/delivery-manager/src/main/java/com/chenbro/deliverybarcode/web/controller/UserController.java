@@ -93,6 +93,27 @@ public class UserController {
         return "login";
     }
 
+    @RequestMapping("monitor")
+    public String monitorC() {
+        return "monitor";
+    }
+
+    @RequestMapping("monitorb")
+    public String monitorB() {
+        return "monitorB";
+    }
+
+    @RequestMapping("monitora")
+    public String monitorA() {
+        return "monitorA";
+    }
+
+
+    @RequestMapping("shipment")
+    public String shipmentScan() {
+        return "shipmentScan";
+    }
+
     @RequestMapping("main")
     public String toMain() {
         return "main";

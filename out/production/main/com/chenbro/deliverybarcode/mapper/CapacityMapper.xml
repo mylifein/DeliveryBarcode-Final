@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.CapacityMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.Capacity">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="capacity_no" property="capacityNo" jdbcType="VARCHAR"/>
+        <result column="capacity_qty" property="capacityQty" jdbcType="INTEGER"/>
+        <result column="capacity_desc" property="capacityDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, capacity_no, capacity_qty, capacity_desc, op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_capacity
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findCapacityByNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_capacity
+        where capacity_no = #{capacityNo,jdbcType=VARCHAR}
+    </select>
+
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_capacity
+        where del_flag is null
+        <if test="delMatno != null and delMatno != ''">
+            and del_matno = #{delMatno,jdbcType=VARCHAR}
+        </if>
+        order by create_time
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_capacity
+    where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+</mapper>

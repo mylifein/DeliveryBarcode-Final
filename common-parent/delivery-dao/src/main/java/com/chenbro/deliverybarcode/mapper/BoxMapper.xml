@@ -6,6 +6,7 @@
         <result column="cartonNo" property="cartonNo" jdbcType="VARCHAR"/>
         <result column="cartonQty" property="cartonQty" jdbcType="INTEGER"/>
         <result column="prodline_id" property="prodlineId" jdbcType="VARCHAR"/>
+        <result column="prodline_desc" property="prodLineDesc" jdbcType="VARCHAR"/>
         <result column="carton_status" property="cartonStatus" jdbcType="VARCHAR"/>
         <result column="capacity_no" property="capacityNo" jdbcType="VARCHAR"/>
         <result column="packType" property="packType" jdbcType="VARCHAR"/>
@@ -36,6 +37,7 @@
         <result column="cartonNo" property="cartonNo" jdbcType="VARCHAR"/>
         <result column="cartonQty" property="cartonQty" jdbcType="INTEGER"/>
         <result column="prodline_id" property="prodlineId" jdbcType="VARCHAR"/>
+        <result column="prodline_desc" property="prodLineDesc" jdbcType="VARCHAR"/>
         <result column="carton_status" property="cartonStatus" jdbcType="VARCHAR"/>
         <result column="capacity_no" property="capacityNo" jdbcType="VARCHAR"/>
         <result column="packType" property="packType" jdbcType="VARCHAR"/>
@@ -82,13 +84,43 @@
     </resultMap>
 
 
+    <resultMap id="MonitorInfo" type="com.chenbro.deliverybarcode.model.response.MonitorInfo">
+        <id column="work_no" property="workNo" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="wo_quantity" property="woQuantity" jdbcType="VARCHAR"/>
+        <result column="currentTotal" property="totayTotalQty" jdbcType="VARCHAR"/>
+        <result column="totalQty" property="totalQty" jdbcType="VARCHAR"/>
+        <result column="prodline_desc" property="prodlineDesc" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="InspurCT" type="com.chenbro.deliverybarcode.model.response.InspurCT">
+        <id column="ct_code" property="inspurQN" jdbcType="VARCHAR"/>
+        <result column="work_no" property="workOrderID" jdbcType="VARCHAR"/>
+        <result column="cus_matno" property="inspurPN" jdbcType="VARCHAR"/>
+        <result column="prodline_id" property="operationCode" jdbcType="VARCHAR"/>
+        <result column="prodline_desc" property="operationName" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="create_time" property="startTime" jdbcType="VARCHAR"/>
+        <result column="carton_status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ProductsInfoResult" type="com.chenbro.deliverybarcode.model.response.ProductsInfoResult">
+        <id column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="prodline_desc" property="prodlineDesc" jdbcType="VARCHAR"/>
+        <result column="totalQty" property="totalQty" jdbcType="INTEGER"/>
+        <result column="boxesQty" property="boxesQty" jdbcType="INTEGER"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
     <sql id="Base_Column_List">
     uuid, cartonNo, cartonQty, prodline_id, carton_status, capacity_no, packType,rule_no,work_no,cus_no,cus_name,cus_po,po_qty,cus_matno,del_matno,offi_no,ver_no,wo_quantity,model_no,so_order,vehicle_No,op_user, create_time,update_user, update_time,del_flag
     </sql>
 
     <sql id="InspurBase_Column_List">
     ItemNo, WorkOrder, CustomerSegment, Amount, ScanTime, BatchNo, PalletNo,PO,VehicleNo
-  </sql>
+    </sql>
 
 
     <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -121,6 +153,44 @@
         order by ScanTime desc
     </select>
 
+    <select id="yesterdayShippedBoxes" resultMap="ProductsInfoResult">
+        SELECT
+            c.dept_name,
+            b.prodline_desc,
+            SUM(a.cartonQty)totalQty,
+            count(a.cartonNo) boxesQty,
+            a.del_matno
+        FROM
+            barcode_history e
+				LEFT JOIN t_carton_info a ON e.barcode = a.cartonNo
+        LEFT JOIN t_prodline b ON a.prodline_id = b.prodline_id
+        LEFT JOIN t_department c ON b.dept_id = c.dept_id
+        WHERE
+            TO_DAYS(NOW()) - TO_DAYS(e.create_time) = 1
+        AND e.act_type = 3 AND barcode_type = 'BOX'
+        GROUP BY
+            a.del_matno,b.prodline_id ORDER BY b.prodline_id
+    </select>
+
+
+    <select id="delayShippedBoxes" resultMap="ProductsInfoResult">
+        SELECT
+            c.dept_name,
+            b.prodline_desc,
+            SUM(a.cartonQty)totalQty,
+            count(a.cartonNo) boxesQty,
+            a.del_matno
+        FROM
+            t_carton_info a
+        LEFT JOIN t_prodline b ON a.prodline_id = b.prodline_id
+        LEFT JOIN t_department c ON b.dept_id = c.dept_id
+        WHERE
+            TO_DAYS(a.create_time) >=  TO_DAYS('2020-12-01')
+        AND a.carton_status = 1
+        GROUP BY
+            a.del_matno,b.prodline_id ORDER BY b.prodline_id
+    </select>
+
     <select id="findBoxsByStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
@@ -130,6 +200,7 @@
         </if>
         order by create_time desc
     </select>
+
 
     <select id="findQtysByStatus" resultType="java.lang.Integer" parameterType="java.lang.String">
         select
@@ -147,10 +218,100 @@
         where a.cartonNo in (select b.cartonNo from t_carton_pallet b where b.palletNo = #{palletNo,jdbcType=VARCHAR})
     </select>
 
+    <select id="queryMonitorInfos" resultMap="MonitorInfo" parameterType="java.lang.String">
+        SELECT
+        va.work_no,
+        va.del_matno,
+        va.wo_quantity,
+        va.currentTotal,
+        vb.totalQty,
+        va.prodline_desc,
+        va.prodline_id
+        FROM
+        (
+        SELECT
+        a.work_no,
+        a.del_matno,
+        a.wo_quantity,
+        SUM(a.cartonQty) currentTotal,
+        b.prodline_desc,
+        b.prodline_id
+        FROM
+        t_carton_info a
+        LEFT JOIN t_prodline b ON a.prodline_id = b.prodline_id
+        WHERE
+        TO_DAYS(a.create_time) = TO_DAYS(NOW())
+        GROUP BY
+        a.work_no,
+        a.prodline_id
+        ORDER BY
+        a.prodline_id
+        ) va
+        LEFT JOIN (
+        SELECT
+        c.work_no,
+        SUM(cartonQty) totalQty
+        FROM
+        t_carton_info c
+        WHERE
+        c.work_no IN (
+        SELECT
+        e.work_no
+        FROM
+        (
+        (
+        SELECT DISTINCT
+        d.work_no
+        FROM
+        t_carton_info d
+        WHERE
+        TO_DAYS(create_time) = TO_DAYS(NOW())
+        )
+        ) e
+        )
+        GROUP BY
+        work_no
+        ) vb ON va.work_no = vb.work_no
+        <if test="prodLineId != null and prodLineId != ''">HAVING prodline_id = #{prodLineId,jdbcType=VARCHAR}</if>
+    </select>
+
+    <select id="queryUncompletedInfos" resultMap="MonitorInfo" parameterType="java.lang.String">
+        SELECT
+        c.work_no,
+        c.del_matno,
+        c.wo_quantity,
+        SUM(cartonQty) totalQty,
+        c.prodline_id,
+        b.prodline_desc,
+        c.create_time
+        FROM
+        t_carton_info c LEFT JOIN t_prodline b ON c.prodline_id = b.prodline_id
+        WHERE
+        c.work_no IN (
+        SELECT
+        e.work_no
+        FROM
+        (
+        (
+        SELECT DISTINCT
+        d.work_no
+        FROM
+        t_carton_info d
+        WHERE
+        TO_DAYS(NOW()) - TO_DAYS(create_time) &lt;= 7 and TO_DAYS(NOW()) - TO_DAYS(create_time) >= 1
+        )
+        ) e
+        )
+        GROUP BY
+        work_no HAVING totalQty &lt; wo_quantity
+        <if test="prodLineId != null and prodLineId != ''">and c.prodline_id = #{prodLineId,jdbcType=VARCHAR}</if>
+    </select>
+
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from t_carton_info
     where uuid = #{uuid,jdbcType=VARCHAR}
-  </delete>
+    </delete>
 
     <update id="updateStatus" parameterType="com.chenbro.deliverybarcode.model.Box">
         update t_carton_info
@@ -170,6 +331,7 @@
         </set>
         where cartonNo = #{cartonNo,jdbcType=VARCHAR}
     </update>
+
 
 
     <update id="update" parameterType="com.chenbro.deliverybarcode.model.Box">
@@ -289,4 +451,95 @@
         </if>
         order by create_time desc
     </select>
+
+    <select id="findInspurInfo" resultMap="InspurCT" parameterType="com.chenbro.deliverybarcode.model.InspurQueryCond">
+        SELECT
+            b.work_no,
+            b.cus_matno,
+            a.ct_code,
+            b.prodline_id,
+            c.prodline_desc,
+            b.del_matno,
+            b.create_time,
+            b.carton_status
+        FROM
+            t_ct_carton a
+        INNER JOIN t_carton_info b ON a.cartonNo = b.cartonNo
+        LEFT JOIN t_prodline c ON b.prodline_id = c.prodline_id
+        <where>
+            <if test="status != null and status != ''">
+                and b.carton_status = #{status,jdbcType=VARCHAR}
+            </if>
+            <if test="fromTime != null and fromTime != ''">
+                and <![CDATA[b.create_time >= #{fromTime,jdbcType=VARCHAR}]]>
+            </if>
+            <if test="toTime != null and toTime != ''">
+                and <![CDATA[b.create_time <= #{toTime,jdbcType=VARCHAR}]]>
+            </if>
+            <if test="delMatnos != null and delMatnos.size() > 0 ">
+                <foreach collection="delMatnos" open="and b.del_matno in (" close=")" item="delMatno" separator=",">
+                    #{delMatno,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="cusNos != null and cusNos.size() > 0 ">
+               <foreach collection="cusNos" open="and b.cus_no in (" close=")" item="cusNo" separator=",">
+                #{cusNo,jdbcType=VARCHAR}
+               </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="currentPallet" resultMap="ProductsInfoResult">
+        SELECT
+            c.dept_name,
+            b.prodline_desc,
+            SUM(a.cartonQty)totalQty,
+            count(a.cartonNo) boxesQty,
+            a.del_matno
+        FROM
+            t_carton_info a
+        LEFT JOIN t_prodline b ON a.prodline_id = b.prodline_id
+        LEFT JOIN t_department c ON b.dept_id = c.dept_id
+        WHERE
+            TO_DAYS(a.update_time) = TO_DAYS(NOW())
+        AND a.carton_status = 3
+        GROUP BY
+            a.del_matno,b.prodline_id ORDER BY b.prodline_id
+    </select>
+
+    <update id="deleteBoxRelCts" parameterType="com.chenbro.deliverybarcode.model.Box">
+        update t_ct_carton
+        <set>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where cartonNo = #{cartonNo,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deleteBox" parameterType="com.chenbro.deliverybarcode.model.Box">
+        update t_carton_info
+        <set>
+            <if test="cartonStatus != null">
+                carton_status = #{cartonStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where cartonNo = #{cartonNo,jdbcType=VARCHAR}
+    </update>
 </mapper>

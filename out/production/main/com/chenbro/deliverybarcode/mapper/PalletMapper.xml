@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.PalletMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.Pallet">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="palletNo" property="palletNo" jdbcType="VARCHAR"/>
+        <result column="work_no" property="workNo" jdbcType="VARCHAR"/>
+        <result column="palletQty" property="palletQty" jdbcType="INTEGER"/>
+        <result column="batchNo" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="capacity_no" property="capacityNo" jdbcType="VARCHAR"/>
+        <result column="model_no" property="modelNo" jdbcType="VARCHAR"/>
+        <result column="rule_no" property="ruleNo" jdbcType="VARCHAR"/>
+        <result column="cus_no" property="cusNo" jdbcType="VARCHAR"/>
+        <result column="cus_name" property="cusName" jdbcType="VARCHAR"/>
+        <result column="cus_po" property="cusPo" jdbcType="VARCHAR"/>
+        <result column="cus_matno" property="cusMatno" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="so_order" property="soOrder" jdbcType="VARCHAR"/>
+        <result column="vehicle_No" property="vehicleNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseDetailResultMap" type="com.chenbro.deliverybarcode.model.Pallet">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="palletNo" property="palletNo" jdbcType="VARCHAR"/>
+        <result column="work_no" property="workNo" jdbcType="VARCHAR"/>
+        <result column="palletQty" property="palletQty" jdbcType="INTEGER"/>
+        <result column="batchNo" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="capacity_no" property="capacityNo" jdbcType="VARCHAR"/>
+        <result column="model_no" property="modelNo" jdbcType="VARCHAR"/>
+        <result column="rule_no" property="ruleNo" jdbcType="VARCHAR"/>
+        <result column="cus_no" property="cusNo" jdbcType="VARCHAR"/>
+        <result column="cus_name" property="cusName" jdbcType="VARCHAR"/>
+        <result column="cus_po" property="cusPo" jdbcType="VARCHAR"/>
+        <result column="cus_matno" property="cusMatno" jdbcType="VARCHAR"/>
+        <result column="del_matno" property="delMatno" jdbcType="VARCHAR"/>
+        <result column="so_order" property="soOrder" jdbcType="VARCHAR"/>
+        <result column="vehicle_No" property="vehicleNo" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <collection property="boxes" ofType="com.chenbro.deliverybarcode.model.Box">
+            <id column="boxId" property="uuid" jdbcType="VARCHAR"/>
+            <result column="cartonNo" property="cartonNo" jdbcType="VARCHAR"/>
+            <result column="cartonQty" property="cartonQty" jdbcType="INTEGER"/>
+            <result column="prodline_id" property="prodlineId" jdbcType="VARCHAR"/>
+            <result column="carton_status" property="cartonStatus" jdbcType="VARCHAR"/>
+            <result column="boxCapcacity" property="capacityNo" jdbcType="VARCHAR"/>
+            <result column="packType" property="packType" jdbcType="VARCHAR"/>
+            <result column="boxRuleNo" property="ruleNo" jdbcType="VARCHAR"/>
+            <result column="boxWoNo" property="workNo" jdbcType="VARCHAR"/>
+            <result column="boxCusNo" property="cusNo" jdbcType="VARCHAR"/>
+            <result column="boxCusName" property="cusName" jdbcType="VARCHAR"/>
+            <result column="boxCuspo" property="cusPo" jdbcType="VARCHAR"/>
+            <result column="boxPoqty" property="poQty" jdbcType="VARCHAR"/>
+            <result column="boxCusMatno" property="cusMatno" jdbcType="VARCHAR"/>
+            <result column="boxDelMatno" property="delMatno" jdbcType="VARCHAR"/>
+            <result column="offi_no" property="offiNo" jdbcType="VARCHAR"/>
+            <result column="ver_no" property="verNo" jdbcType="VARCHAR"/>
+            <result column="wo_quantity" property="woQuantity" jdbcType="VARCHAR"/>
+            <result column="boxModelNo" property="modelNo" jdbcType="VARCHAR"/>
+            <result column="boxSoOrder" property="soOrder" jdbcType="VARCHAR"/>
+            <result column="boxVehicleNo" property="vehicleNo" jdbcType="VARCHAR"/>
+            <result column="boxOpuser" property="createBy" jdbcType="VARCHAR"/>
+            <result column="boxCreateTime" property="createDate" jdbcType="VARCHAR"/>
+            <result column="boxUpdateUser" property="updateBy" jdbcType="VARCHAR"/>
+            <result column="boxUpdateTime" property="updateDate" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        uuid, palletNo, work_no, palletQty, batchNo, capacity_no, model_no, rule_no, cus_no,cus_name, cus_po, cus_matno, del_matno, so_order, vehicle_No, status, op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info
+        where palletNo = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findDetailById" resultMap="BaseDetailResultMap">
+        select
+            a.uuid, a.palletNo, a.palletQty, a.batchNo, a.capacity_no, a.model_no, a.rule_no,a.cus_no,a.cus_name,a.cus_po,a.cus_matno,a.del_matno,a.so_order,a.vehicle_No,a.op_user, a.create_time,a.update_user, a.update_time,a.del_flag,
+            c.uuid boxId,c.cartonNo,c.cartonQty,c.batchNo,c.prodline_id,c.prodLine_val,c.carton_status,c.capacity_no boxCapcacity,c.packType,c.rule_no boxCapcacity,c.work_no boxWoNo,c.cus_no boxCusNo,c.cus_name boxCusName,c.cus_po boxCuspo,
+            c.po_qty boxCuspo,c.cus_matno boxCusMatno,c.del_matno boxDelMatno,c.offi_no,c.ver_no,c.wo_quantity,c.model_no boxModelNo,c.so_order boxSoOrder,c.vehicle_No boxVehicleNo,c.op_user boxOpuser, c.create_time boxCreateTime,c.update_user boxUpdateUser,
+            c.update_time boxUpdateTime
+        from t_pallet_info a left join t_carton_pallet b on a.palletNo = b.palletNo left join t_carton_info c on b.cartonNo = c.cartonNo
+        where a.uuid = #{uuid,jdbcType=VARCHAR} and b.del_flag is null
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from t_pallet_info
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.Pallet">
+        update t_pallet_info
+        <set>
+            <if test="workNo != null">
+                work_no = #{workNo,jdbcType=VARCHAR},
+            </if>
+            <if test="palletQty != null">
+                palletQty = #{palletQty,jdbcType=INTEGER},
+            </if>
+            <if test="batchNo != null">
+                batchNo = #{batchNo,jdbcType=VARCHAR},
+            </if>
+            <if test="capacityNo != null">
+                capacity_no = #{capacityNo,jdbcType=VARCHAR},
+            </if>
+            <if test="modelNo != null">
+                model_no = #{modelNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleNo != null">
+                rule_no = #{ruleNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cusNo != null">
+                cus_no = #{cusNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cusName != null">
+                cus_name = #{cusName,jdbcType=VARCHAR},
+            </if>
+            <if test="cusPo != null">
+                cus_po = #{cusPo,jdbcType=VARCHAR},
+            </if>
+            <if test="cusMatno != null">
+                cus_matno = #{cusMatno,jdbcType=VARCHAR},
+            </if>
+            <if test="delMatno != null">
+                del_matno = #{delMatno,jdbcType=VARCHAR},
+            </if>
+            <if test="soOrder != null">
+                so_order = #{soOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="vehicleNo != null">
+                vehicle_No = #{vehicleNo,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where palletNo = #{palletNo,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from t_pallet_info
+        <where>
+            del_flag is null
+            <if test="cusNo != null">
+                and cus_no = #{cusNo,jdbcType=VARCHAR}
+            </if>
+        </where> order by create_time desc
+    </select>
+
+
+    <select id="queryPalletReportByCond" resultMap="BaseResultMap"
+            parameterType="com.chenbro.deliverybarcode.model.PalletQueryCond">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pallet_info where del_flag is null
+        <if test="palletNo != null and palletNo != ''">
+            and palletNo = #{palletNo,jdbcType=VARCHAR}
+        </if>
+        <if test="workNo != null and workNo != ''">
+            and work_no = #{workNo,jdbcType=VARCHAR}
+        </if>
+        <if test="batchNo != null and batchNo != ''">
+            and batchNo = #{batchNo,jdbcType=VARCHAR}
+        </if>
+        <if test="cusMatno != null and cusMatno != ''">
+            and cus_matno = #{cusMatno,jdbcType=VARCHAR}
+        </if>
+        <if test="delMatno != null and delMatno != ''">
+            and del_matno = #{delMatno,jdbcType=VARCHAR}
+        </if>
+        <if test="soOrder != null and soOrder != ''">
+            and so_order = #{soOrder,jdbcType=VARCHAR}
+        </if>
+        <if test="cusPo != null and cusPo != ''">
+            and cus_po = #{cusPo,jdbcType=VARCHAR}
+        </if>
+        <if test="vehicleNo != null and vehicleNo != ''">
+            and vehicle_No = #{vehicleNo,jdbcType=VARCHAR}
+        </if>
+        <if test="createdStartTime != null and createdStartTime != ''">
+            and create_time &gt;=#{createdStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createdEndTime != null and createdEndTime != ''">
+            and <![CDATA[create_time <= #{createdEndTime,jdbcType=VARCHAR}]]>
+        </if>
+        <if test="updatedStartTime != null and updatedStartTime != ''">
+            and <![CDATA[update_time >= #{updatedStartTime,jdbcType=VARCHAR}]]>
+        </if>
+        <if test="updatedEndTime != null and updatedEndTime != ''">
+            and <![CDATA[update_time <= #{updatedEndTime,jdbcType=VARCHAR}]]>
+        </if>
+        order by create_time desc
+    </select>
+</mapper>

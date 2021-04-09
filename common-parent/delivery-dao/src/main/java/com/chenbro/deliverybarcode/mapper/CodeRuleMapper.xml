@@ -88,11 +88,122 @@
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from t_model_file
-    where uuid = #{uuid,jdbcType=VARCHAR}
+        delete from t_model_file
+        where uuid = #{uuid,jdbcType=VARCHAR}
     </delete>
 
 
+    <update id="update" parameterType="com.chenbro.deliverybarcode.model.CodeRule">
+        update t_rule_info
+        <set>
+            <if test="ruleDesc != null and ruleDesc != ''">
+                rule_desc = #{ruleDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateRuleContent" parameterType="com.chenbro.deliverybarcode.model.RuleContent">
+        update t_code_rule
+        <set>
+            <if test="sequence != null and sequence != ''">
+                seq_no = #{sequence,jdbcType=VARCHAR},
+            </if>
+            <if test="typeNo != null and typeNo != ''">
+                rule_type = #{typeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleValue != null and ruleValue != ''">
+                rule_value = #{ruleValue,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleLength != null and ruleLength != ''">
+                rule_length = #{ruleLength,jdbcType=INTEGER},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
 
 
+    <update id="deleteRuleContent" parameterType="com.chenbro.deliverybarcode.model.RuleContent">
+        update t_code_rule
+        <set>
+            <if test="delFlag != null and delFlag != ''">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_user = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null and updateDate != ''">
+                update_time = #{updateDate,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insertRuleContent" parameterType="com.chenbro.deliverybarcode.model.RuleContent">
+        insert into t_code_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                uuid,
+            </if>
+            <if test="ruleNo != null">
+                rule_no,
+            </if>
+            <if test="sequence != null">
+                seq_no,
+            </if>
+            <if test="typeNo != null">
+                rule_type,
+            </if>
+            <if test="ruleValue != null">
+                rule_value,
+            </if>
+            <if test="ruleLength != null">
+                rule_length,
+            </if>
+            <if test="createBy != null">
+                op_user,
+            </if>
+            <if test="createDate != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null">
+                #{uuid,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleNo != null">
+                #{ruleNo,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence != null">
+                #{sequence,jdbcType=VARCHAR},
+            </if>
+            <if test="typeNo != null">
+                #{typeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleValue != null">
+                #{ruleValue,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleLength != null">
+                #{ruleLength,jdbcType=INTEGER},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
 </mapper>

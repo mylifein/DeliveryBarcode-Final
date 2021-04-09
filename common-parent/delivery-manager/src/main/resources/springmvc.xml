@@ -16,11 +16,12 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
+    <!-- 配置Spring 開啓注解AOP的支持 -->
     <aop:aspectj-autoproxy/>
     <!-- 1.注解扫描位置 -->
-    <context:component-scan base-package="com.chenbro.deliverybarcode.web.controller"></context:component-scan>
+    <context:component-scan base-package="com.chenbro.deliverybarcode.web"></context:component-scan>
 
-    <!-- Json 注释驱动 -->
+    <!-- Json 注释驱动  开启Spring MVC框架注解支持 -->
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
@@ -39,5 +40,19 @@
     </bean>
 
 
+    <!-- 配置异常处理器  -->
+
+<!--    <bean id="sysExceptionResolver" class="com.chenbro.deliverybarcode.web.exception.SysExceptionResolver"/>-->
+    <!-- 配置拦截器 -->
+<!--    <mvc:interceptors>-->
+<!--        <mvc:interceptor>-->
+<!--            &lt;!&ndash; 要拦截的具体方法 &ndash;&gt;-->
+<!--            <mvc:mapping path="/user/**"/>-->
+<!--            &lt;!&ndash; 不要拦截的具体方法 &ndash;&gt;-->
+<!--            <mvc:exclude-mapping path=""/>-->
+<!--            &lt;!&ndash; 配置拦截器对象&ndash;&gt;-->
+<!--            <bean  class=""/>-->
+<!--        </mvc:interceptor>-->
+<!--    </mvc:interceptors>-->
 
 </beans>

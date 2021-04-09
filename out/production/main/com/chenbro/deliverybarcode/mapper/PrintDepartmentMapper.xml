@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chenbro.deliverybarcode.mapper.PrintDepartmentMapper">
+    <resultMap id="BaseResultMap" type="com.chenbro.deliverybarcode.model.PrintDepartment">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="dept_desc" property="deptDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <resultMap id="DetailResultMap" type="com.chenbro.deliverybarcode.model.PrintDepartment">
+        <id column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="dept_desc" property="deptDesc" jdbcType="VARCHAR"/>
+        <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+        <collection property="produceLines" ofType="com.chenbro.deliverybarcode.model.ProduceLine">
+            <id column="prodId" property="uuid" jdbcType="VARCHAR"/>
+            <result column="prodline_id" property="prodLineId" jdbcType="VARCHAR"/>
+            <result column="prodline_name" property="proLineName" jdbcType="VARCHAR"/>
+            <result column="prodline_desc" property="prodLineDesc" jdbcType="VARCHAR"/>
+            <result column="prodDeptId" property="depId" jdbcType="VARCHAR"/>
+            <result column="prodDeptName" property="deptName" jdbcType="VARCHAR"/>
+            <result column="prodOpuser" property="createBy" jdbcType="VARCHAR"/>
+            <result column="prodCreateTime" property="createDate" jdbcType="VARCHAR"/>
+            <result column="prodUpdateUser" property="updateBy" jdbcType="VARCHAR"/>
+            <result column="prodUpdateTime" property="updateDate" jdbcType="VARCHAR"/>
+            <result column="prodFlag" property="delFlag" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    uuid, rule_no, rule_desc, op_user, create_time,update_user, update_time,del_flag
+    </sql>
+
+
+
+    <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_file_reldel
+        where uuid = #{uuid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findDetailByUuid" resultMap="DetailResultMap" parameterType="java.lang.String">
+        select a.uuid,a.dept_id,a.dept_name,a.dept_desc,a.op_user,a.create_time,a.update_user,a.update_time,a.del_flag,
+        b.uuid prodId,b.prodline_id,b.prodline_name,b.prodline_desc,b.dept_id prodDeptId,b.dept_name prodDeptName,
+        b.op_user prodOpuser,b.create_time prodCreateTime,b.update_user prodUpdateUser,b.update_time prodUpdateTime
+        from t_department a ,t_prodline b
+        where a.dept_id = b.dept_id and a.uuid = #{uuid,jdbcType=VARCHAR} and a.del_flag is null and b.del_flag is null order by b.seq_no
+    </select>
+
+
+
+
+    <select id="findAll" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_rule_info
+        where del_flag is null order by rule_no
+    </select>
+
+    <select id="findAllDetail" resultMap="DetailResultMap" >
+        select a.uuid,a.dept_id,a.dept_name,a.dept_desc,a.op_user,a.create_time,a.update_user,a.update_time,a.del_flag,
+        b.uuid prodId,b.prodline_id,b.prodline_name,b.prodline_desc,b.dept_id prodDeptId,b.dept_name prodDeptName,
+        b.op_user prodOpuser,b.create_time prodCreateTime,b.update_user prodUpdateUser,b.update_time prodUpdateTime
+        from t_department a ,t_prodline b
+        where a.dept_id = b.dept_id and a.del_flag is null and b.del_flag is null order by b.create_time
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_model_file
+    where uuid = #{uuid,jdbcType=VARCHAR}
+    </delete>
+
+
+
+
+</mapper>

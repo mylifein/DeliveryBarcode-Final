@@ -64,9 +64,9 @@
             <tr>
               <td>
                 <div class="form-group row">
-                  <label for="boxNo" class="col-sm-3 col-form-label">装箱单/栈板条码</label>
+                  <label for="barcode" class="col-sm-3 col-form-label">装箱单/栈板条码</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="boxNo" name="boxNo">
+                    <input type="text" class="form-control" id="barcode" name="barcode">
                   </div>
                 </div>
               </td>
@@ -81,15 +81,11 @@
               <td>
                 <div class="form-group row">
                 <div class="col-sm-10">
-                  <input type="button" class="btn btn-success" id="shippingBtn" value="出货">
+                  <input type="button" class="btn btn-success btn-lg" id="shippingBtn" value="出货">
                 </div>
                 </div>
               </td>
             </tr>
-
-
-
-
           </table>
         </div>
         <!-- /.card-body -->
@@ -129,41 +125,40 @@
       timer: 3000
     });
     $('#shippingBtn').click(function () {
-      var boxNo = $('#boxNo').val();
+      var barcode = $('#barcode').val();
       var vehicleNo = $('#vehicleNo').val();
-      if(boxNo == null || boxNo == "" || vehicleNo == null || vehicleNo == "" ){
+      if(barcode == null || barcode == "" || vehicleNo == null || vehicleNo == "" ){
         Toast.fire({
           type: 'warning',
           title: '条码/车牌号不能为空'
         })
       }else{
       $.ajax({
-        url:'${pageContext.request.contextPath}/box/shipping.do',
-        data:{'cartonNo':boxNo,'vehicleNo':vehicleNo},           //序列化表单数据，格式为name=value
+        url:'${pageContext.request.contextPath}/pallet/shipping.do',
+        data:{'barcode':barcode,'vehicleNo':vehicleNo},           //序列化表单数据，格式为name=value
         type:'POST',
         dataType:'json',
         success:function (data) {
-          console.log(data);
           if(data.success){
             Toast.fire({
               type: 'success',
               title: '出货成功'
             });
-            $('#boxNo').val("");
-            $('#boxNo').focus();
+            $('#barcode').val("");
+            $('#barcode').focus();
           }else{
             Toast.fire({
               type: 'warning',
               title: '出货失败,' + data.message
             })
-            $('#boxNo').val("");
-            $('#boxNo').focus();
+            $('#barcode').val("");
+            $('#barcode').focus();
           }
         },
         error:function () {
           Toast.fire({
             type: 'error',
-            title: '出货Error'
+            title: '出货Error,请检查是否登录超时'
           })
         }
 

@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>delivery-utils</artifactId>
+    <packaging>jar</packaging>
 
     <name>delivery-utils</name>
     <!-- FIXME change it to the project's website -->
@@ -71,6 +72,13 @@
             <version>${servlet-jsp.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>${commonsMail.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

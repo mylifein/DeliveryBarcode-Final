@@ -122,6 +122,17 @@
                                 <input type="date" class="form-control" name="updatedEndTime" id="updatedEndTime">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="palletNo" class="col-sm-1 col-form-label">栈板状态</label>
+                            <div class="col-sm-2">
+                                <select type="text" class="form-control" name="status" id="status" readonly>
+                                    <option value="3">已出货</option>
+                                    <option value="NG">NG</option>
+                                    <option value="PASS">PASS</option>
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="card-footer">
                             <button type="button" class="btn btn-info float-right" id="queryBtn">查询</button>
                         </div>
@@ -201,7 +212,6 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     if (data.success) {
                         if ($displayTable == null) {
                             $displayTable = initTable(data.data);
