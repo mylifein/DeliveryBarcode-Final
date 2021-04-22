@@ -8,4 +8,6 @@ import java.util.List;
 public interface VMIStockMapper extends BaseMapper<VMIStock> {
 
     List<VMIStock> findAll(VMIStock vmiStock);
+
+    void deleteByReplyId(Long replyId);
 }

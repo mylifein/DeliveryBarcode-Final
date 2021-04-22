@@ -1,13 +1,17 @@
 package com.chenbro.deliverybarcode.service.impl;
 
 import com.chenbro.deliverybarcode.model.CommonException;
+import com.chenbro.deliverybarcode.model.VMIEntity;
 import com.chenbro.deliverybarcode.model.VMIStock;
+import com.chenbro.deliverybarcode.model.base.Result;
+import com.chenbro.deliverybarcode.model.base.ResultCode;
 import com.chenbro.deliverybarcode.service.IVMIStockService;
 import com.chenbro.deliverybarcode.service.base.BaseServiceImpl;
 import com.chenbro.deliverybarcode.utils.DateUtils;
 import com.chenbro.deliverybarcode.utils.UuidUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -42,15 +46,27 @@ public class VMIStockServiceImpl extends BaseServiceImpl<VMIStock> implements IV
     @Override
     public void insert(VMIStock vmiStock) {
         //设置主键的值
+        vmiStock.setCreateBy("VMI-User");
         vmiStock.setUuid(UuidUtils.getUUID());
-        vmiStock.setCreateDate(DateUtils.date2String(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        vmiStock.setCreateDate(DateUtils.date2String(new Date(), "yyyy-MM-dd HH:mm:ss"));
         vmiStockMapper.insert(vmiStock);
     }
 
     @Override
-    public void saveStocks(List<VMIStock> stocks) {
-        for (VMIStock stock : stocks) {
-            this.insert(stock);
+    public Result saveStocks(VMIEntity vmiEntity) {
+        if (ObjectUtils.isEmpty(vmiEntity.getReplyId())) {
+            vmiEntity.setReplyId(System.currentTimeMillis());
+            for (VMIStock stock : vmiEntity.getStocks()) {
+                stock.setReplyId(vmiEntity.getReplyId());
+                this.insert(stock);
+            }
+        } else {
+            vmiStockMapper.deleteByReplyId(vmiEntity.getReplyId());
+            for (VMIStock stock : vmiEntity.getStocks()) {
+                stock.setReplyId(vmiEntity.getReplyId());
+                this.insert(stock);
+            }
         }
+        return new Result(ResultCode.SUCCESS, vmiEntity.getReplyId());
     }
 }

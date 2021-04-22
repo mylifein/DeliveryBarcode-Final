@@ -1,5 +1,6 @@
 package com.chenbro.deliverybarcode.api.controller;
 
+import com.chenbro.deliverybarcode.model.VMIEntity;
 import com.chenbro.deliverybarcode.model.VMIStock;
 import com.chenbro.deliverybarcode.model.base.Result;
 import com.chenbro.deliverybarcode.model.base.ResultCode;
@@ -29,8 +30,7 @@ public class VmiStockController {
 
 
     @RequestMapping(value = "stocks", method = RequestMethod.POST)
-    public Result saveVmiStocks (@RequestBody List<VMIStock> stocks) {
-        stockService.saveStocks(stocks);
-        return  new Result(ResultCode.SUCCESS);
+    public Result saveVmiStocks (@RequestBody VMIEntity entity) {
+        return stockService.saveStocks(entity);
     }
 }

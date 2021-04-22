@@ -26,6 +26,7 @@ public class VMIStock extends BaseEntity {
     private String supplier;
     private String prodProp;
     private String remark;
+    private Long replyId;
 
     public String getCusMatno() {
         return cusMatno;
@@ -129,5 +130,13 @@ public class VMIStock extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getReplyId() {
+        return replyId;
+    }
+
+    public void setReplyId(Long replyId) {
+        this.replyId = replyId;
     }
 }

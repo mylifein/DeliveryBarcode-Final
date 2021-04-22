@@ -15,6 +15,7 @@
         <result column="prod_owner" property="prodOwner" jdbcType="VARCHAR"/>
         <result column="supplier" property="supplier" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="reply_id" property="replyId" jdbcType="VARCHAR"/>
         <result column="op_user" property="createBy" jdbcType="VARCHAR"/>
         <result column="create_time" property="createDate" jdbcType="VARCHAR"/>
         <result column="update_user" property="updateBy" jdbcType="VARCHAR"/>
@@ -24,7 +25,7 @@
 
 
     <sql id="Base_Column_List">
-        uuid, cus_matno, del_matno, dn, prod_name, prod_qty, wm_name, store_date, stock_days, plan_due, prod_owner, supplier, prod_prop, remark, op_user, create_time,update_user, update_time,del_flag
+        uuid, cus_matno, del_matno, dn, prod_name, prod_qty, wm_name, store_date, stock_days, plan_due, prod_owner, supplier, prod_prop, remark, reply_id, op_user, create_time,update_user, update_time,del_flag
     </sql>
 
     <select id="findByUUid" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -199,6 +200,9 @@
             <if test="remark != null">
                 remark,
             </if>
+            <if test="replyId != null">
+                reply_id,
+            </if>
             <if test="createBy != null">
                 op_user,
             </if>
@@ -258,6 +262,9 @@
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="replyId != null">
+                #{replyId,jdbcType=BIGINT},
+            </if>
             <if test="createBy != null">
                 #{createBy,jdbcType=VARCHAR},
             </if>
@@ -276,5 +283,8 @@
         </trim>
     </insert>
 
+    <delete id="deleteByReplyId" parameterType="java.lang.Long">
+        delete from vmi_stock where reply_id = #{replyId}
+    </delete>
 
 </mapper>
